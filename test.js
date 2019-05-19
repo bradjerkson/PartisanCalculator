@@ -1,4 +1,10 @@
 const MAXRESULT = 1000000
+/*
+Modules used
+
+anchorme - for detecting URLs in a string
+
+*/
 
 function getHistory(){
     //here we call chrome.history.search
@@ -47,71 +53,35 @@ function parseURL(url) {
     };
 }
 
-function parseURL(url) {
-    var parser = document.createElement('a'),
-        searchObject = {},
-        queries, split, i;
-    // Let the browser do the work
-    parser.href = url;
-    // Convert query string to object
-    queries = parser.search.replace(/^\?/, '').split('&');
-    for( i = 0; i < queries.length; i++ ) {
-        split = queries[i].split('=');
-        searchObject[split[0]] = split[1];
-    }
-    return {
-        protocol: parser.protocol,
-        host: parser.host,
-        hostname: parser.hostname,
-        port: parser.port,
-        pathname: parser.pathname,
-        search: parser.search,
-        searchObject: searchObject,
-        hash: parser.hash
-    };
-}
-
 function parseHistory(result){
-    var list = [];
+    var output_obj = {};
+    output_obj.urls = []
     for(var i = 0; i < result.length; i++){
-        //str = result[i];
-        let str = result[i].title + " - " + result[i].url;
-        //console.log(str);
 
+        let str = result[i].title + " - " + result[i].url;
         let url_full_regex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
         let url_full = new RegExp(url_full_regex);
-
-        //let url_regex = /(https|http):\/\/(www)?([A-Za-z]*\.|\.)([A-Za-z]*\.|[A-Za-z]*\/)([A-Za-z]*\/)?(com\.au\/?)?/;
-        //let url = new RegExp(url_regex);
-
         let newstr = str.match(url_full);
-
-        
-        var newstr2 = "";
         try{
-            newstr2 = newstr[0];
-            let tld = /(https|http):\/\/(www)?([A-Za-z]*\.|\.)([A-Za-z]*\.|[A-Za-z]*\/)([A-Za-z]*\/)?(com\.au\/?)?/;
-            newstr2 = newstr2.match(tld)[0];
-            list.push(newstr2);
+            newstr = str.match(url_full)[0];
         }
-        catch(err){
-            //nuffin
+        catch{
+            //pass
         }
-        //let reg = /\w+\.\w+$/;
-        //let regstr = newstr.match(reg);
-        
-      /*
-        Holy grail of regex
-        (https|http):\/\/(www)?([A-Za-z]*\.|\.)([A-Za-z]*\.|[A-Za-z]*\/)([A-Za-z]*\/)?(com\.au\/?)?
+
+        out_str = parseURL(newstr).hostname;
+        output_obj.urls.push(out_str);
+
+        /*
+        document.body.appendChild(document.createElement('br'));
+        document.body.appendChild(document.createTextNode(out_str.hostname));
+        document.body.appendChild(document.createElement('br'));
         */
-
-
-        document.body.appendChild(document.createElement('br'));
-        document.body.appendChild(document.createTextNode(newstr2));
-        document.body.appendChild(document.createElement('br'));
-       /* */
     }
-    return list;
+    
+    var out = JSON.stringify(output_obj);
+    document.body.appendChild(document.createTextNode(out));
+    return output_obj;
 }
 
 
