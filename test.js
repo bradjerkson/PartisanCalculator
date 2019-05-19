@@ -15,10 +15,60 @@ function getHistory(){
         },
         function(result){
             //console.log(result);
-            parseHistory(result)
-
+            list = parseHistory(result);
+            counts = countHistory(list);
+            
     });
 
+}
+
+function parseURL(url) {
+    //https://www.abeautifulsite.net/parsing-urls-in-javascript
+    var parser = document.createElement('a'),
+        searchObject = {},
+        queries, split, i;
+    // Let the browser do the work
+    parser.href = url;
+    // Convert query string to object
+    queries = parser.search.replace(/^\?/, '').split('&');
+    for( i = 0; i < queries.length; i++ ) {
+        split = queries[i].split('=');
+        searchObject[split[0]] = split[1];
+    }
+    return {
+        protocol: parser.protocol,
+        host: parser.host,
+        hostname: parser.hostname,
+        port: parser.port,
+        pathname: parser.pathname,
+        search: parser.search,
+        searchObject: searchObject,
+        hash: parser.hash
+    };
+}
+
+function parseURL(url) {
+    var parser = document.createElement('a'),
+        searchObject = {},
+        queries, split, i;
+    // Let the browser do the work
+    parser.href = url;
+    // Convert query string to object
+    queries = parser.search.replace(/^\?/, '').split('&');
+    for( i = 0; i < queries.length; i++ ) {
+        split = queries[i].split('=');
+        searchObject[split[0]] = split[1];
+    }
+    return {
+        protocol: parser.protocol,
+        host: parser.host,
+        hostname: parser.hostname,
+        port: parser.port,
+        pathname: parser.pathname,
+        search: parser.search,
+        searchObject: searchObject,
+        hash: parser.hash
+    };
 }
 
 function parseHistory(result){
@@ -36,19 +86,20 @@ function parseHistory(result){
 
         let newstr = str.match(url_full);
 
-        /*
-        var newstr2 = ""
+        
+        var newstr2 = "";
         try{
-            newstr2 = newstr[0]
-            let tld = /\w+\.\w+$/
-            //newstr2 = newstr2.match(tld)
+            newstr2 = newstr[0];
+            let tld = /(https|http):\/\/(www)?([A-Za-z]*\.|\.)([A-Za-z]*\.|[A-Za-z]*\/)([A-Za-z]*\/)?(com\.au\/?)?/;
+            newstr2 = newstr2.match(tld)[0];
+            list.push(newstr2);
         }
         catch(err){
             //nuffin
         }
         //let reg = /\w+\.\w+$/;
         //let regstr = newstr.match(reg);
-        */
+        
       /*
         Holy grail of regex
         (https|http):\/\/(www)?([A-Za-z]*\.|\.)([A-Za-z]*\.|[A-Za-z]*\/)([A-Za-z]*\/)?(com\.au\/?)?
@@ -56,14 +107,30 @@ function parseHistory(result){
 
 
         document.body.appendChild(document.createElement('br'));
-        document.body.appendChild(document.createTextNode(newstr));
+        document.body.appendChild(document.createTextNode(newstr2));
         document.body.appendChild(document.createElement('br'));
        /* */
     }
+    return list;
 }
 
 
+function countHistory(results){
+    list = [];
+    var dict = new Object();
+    for(var i = 0; i < results.length; i++){
+        if (results[i] in dict){
+            dict[results[i]] += 1;
+        }
+        else{
+            dict[results[i]] = 1;
+        }
 
+    }
+
+    console.log(dict);
+    return dict;
+}
 
 
 
