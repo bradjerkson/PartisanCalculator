@@ -1,6 +1,7 @@
 import json
 import sklearn
 import pandas as pd
+import sys
 
 from collections import Counter
 from sklearn.naive_bayes import GaussianNB
@@ -46,12 +47,15 @@ def simple_classifier(history, scoring):
     
     #tf-idf?
     score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
-    return score
+    return score / len(history)
 
+def main(input_history):
+    df = pd.read_csv("newsmedia.csv", header=0)
+    counts = load_instance(input_history)
+    full_view(df)
+    history = generate_user_media_history(df, counts)
+    score = simple_classifier(history, scoring)
+    print(score)
 
-df = pd.read_csv("newsmedia.csv", header=0)
-counts = load_instance("sample_input.json")
-full_view(df)
-history = generate_user_media_history(df, counts)
-score = simple_classifier(history, scoring)
-
+if __name__ == "__main__":
+	main(sys.argv[1])
