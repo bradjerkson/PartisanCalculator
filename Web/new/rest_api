@@ -1,0 +1,9 @@
+server {
+   listen 80;
+   server_name 103.6.254.30;
+
+   location / {
+      include uwsgi_params;
+      uwsgi_pass unix:/home/ubuntu/PartisanCalculator/Web/rest_api.sock
+   }
+}
