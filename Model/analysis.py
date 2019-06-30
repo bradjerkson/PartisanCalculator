@@ -30,9 +30,11 @@ class PartisanModel:
         pd.set_option('display.max_rows', len(df))
         print(df)
 
-    def load_instance(self, filename):
-        with open(filename) as inputfile:
-            data = json.load(inputfile)
+    #we can either load instance via a filename, or a JSON object directly
+    def load_instance(self, history, isFilename=False):
+        if isFilename==True:
+            with open(history) as inputfile:
+                data = json.load(inputfile)
 
         counts = (Counter(data["urls"]))
         df = pd.DataFrame.from_dict(counts, orient='index').reset_index()
