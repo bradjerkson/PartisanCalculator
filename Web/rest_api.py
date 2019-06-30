@@ -1,7 +1,6 @@
 import sys
 from flask import Flask, render_template, request, jsonify
 
-sys.path.append('../Model')
 from analysis import PartisanModel
 
 
