@@ -16,7 +16,9 @@ def default():
 
 @app.route("/receive", methods=['GET','POST'])
 def receive():
+    print("starting")
     req_data = request.get_json(force=True)
+    
     if req_data == None:
         return "nothing requested!"
     else:
@@ -24,6 +26,7 @@ def receive():
         model = PartisanModel("newsmedia.csv", req_data)
         model.run()
         return str(model.score)
+    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
