@@ -35,6 +35,8 @@ class PartisanModel:
         if isFilename==True:
             with open(history) as inputfile:
                 data = json.load(inputfile)
+        else:
+           data = self.input_history
 
         counts = (Counter(data["urls"]))
         df = pd.DataFrame.from_dict(counts, orient='index').reset_index()
@@ -53,7 +55,6 @@ class PartisanModel:
 
         #handle the zeroes
         zeroes = scores[scores == 0].shape[0]
-        
         #tf-idf?
         score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
         return score / len(history)
