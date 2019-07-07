@@ -55,13 +55,20 @@ class PartisanModel:
 
         #handle the zeroes
         zeroes = scores[scores == 0].shape[0]
+        print("this is the section we are currently debugging")
+        print("zeroes ", zeroes)
+        print("scores ", scores)
+        print("history ", history)
         #tf-idf?
         score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
         return score / len(history)
 
     def run(self):
         self.df = pd.read_csv(self.labels, header=0)
+        print("df in run ", self.df)
         self.counts = self.load_instance(self.input_history)
+        print("counts in run ", self.counts)
         self.history = self.generate_user_media_history(self.df, self.counts)
+        print("history in run ", self.history)
         self.score = self.simple_classifier(self.history, self.scoring)
         print(self.score)
