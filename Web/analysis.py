@@ -67,6 +67,7 @@ class PartisanModel:
         self.history = self.generate_user_media_history(self.df, self.counts)
         if self.history.empty:
             print("Sorry, your browsing history has insufficient data. Keep on browsing!")
+            self.score = "Sorry, your browsing history has insufficient data. Keep on browsing!"
         else:
             self.score = self.simple_classifier(self.history, self.scoring)
             print(self.score)
