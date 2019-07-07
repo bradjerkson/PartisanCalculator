@@ -9,6 +9,9 @@ from sklearn.naive_bayes import GaussianNB
 class PartisanModel:
     def __init__(self, labels, input_history):
         self.input_history = input_history
+        #if input_history is just the filename it is a string type
+        #otherwise it'll be dict
+        self.input_history_type = type(input_history)
         self.labels = labels
         self.scoring = {
             'extreme_right':3,
@@ -31,13 +34,13 @@ class PartisanModel:
         print(df)
 
     #we can either load instance via a filename, or a JSON object directly
-    def load_instance(self, history, isFilename=False):
-        if isFilename==True:
+    def load_instance(self, history, filetype):
+        if filetype is str:
             with open(history) as inputfile:
                 data = json.load(inputfile)
         else:
            data = self.input_history
-
+        print("verifying what data is: ", data)
         counts = (Counter(data["urls"]))
         df = pd.DataFrame.from_dict(counts, orient='index').reset_index()
         df['index'] = df['index'].str.replace('www[23]?.', '', case=False)
@@ -55,20 +58,13 @@ class PartisanModel:
 
         #handle the zeroes
         zeroes = scores[scores == 0].shape[0]
-        print("this is the section we are currently debugging")
-        print("zeroes ", zeroes)
-        print("scores ", scores)
-        print("history ", history)
         #tf-idf?
         score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
         return score / len(history)
 
     def run(self):
         self.df = pd.read_csv(self.labels, header=0)
-        print("df in run ", self.df)
-        self.counts = self.load_instance(self.input_history)
-        print("counts in run ", self.counts)
+        self.counts = self.load_instance(self.input_history, self.input_history_type)
         self.history = self.generate_user_media_history(self.df, self.counts)
-        print("history in run ", self.history)
         self.score = self.simple_classifier(self.history, self.scoring)
         print(self.score)
