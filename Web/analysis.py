@@ -40,7 +40,6 @@ class PartisanModel:
                 data = json.load(inputfile)
         else:
            data = self.input_history
-        print("verifying what data is: ", data)
         counts = (Counter(data["urls"]))
         df = pd.DataFrame.from_dict(counts, orient='index').reset_index()
         df['index'] = df['index'].str.replace('www[23]?.', '', case=False)
@@ -66,5 +65,8 @@ class PartisanModel:
         self.df = pd.read_csv(self.labels, header=0)
         self.counts = self.load_instance(self.input_history, self.input_history_type)
         self.history = self.generate_user_media_history(self.df, self.counts)
-        self.score = self.simple_classifier(self.history, self.scoring)
-        print(self.score)
+        if self.history.empty:
+            print("Sorry, your browsing history has insufficient data. Keep on browsing!")
+        else:
+            self.score = self.simple_classifier(self.history, self.scoring)
+            print(self.score)
