@@ -22,7 +22,6 @@ def receive():
     if req_data == None:
         return "nothing requested!"
     else:
-        print(format(req_data))
         model = PartisanModel("newsmedia.csv", req_data)
         model.run()
         return str(model.score)
