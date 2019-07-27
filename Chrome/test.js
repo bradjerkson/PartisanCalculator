@@ -1,9 +1,65 @@
 const MAXRESULT = 1000000
+var target = "http://103.6.254.30/*"
 /*
 Modules used
 
 anchorme - for detecting URLs in a string
 
+*/
+
+//we want to generate a unique user ID per each chrome extension installed
+
+function sleep( millisecondsToWait )
+{
+    var now = new Date().getTime();
+    while ( new Date().getTime() < now + millisecondsToWait )
+        {
+        /* do nothing; this will exit once it reaches the time limit */
+        /* if you want you could do something and exit */
+        }
+}
+
+function getRandomToken() {
+    // E.g. 8 * 32 = 256 bits token
+    var randomPool = new Uint8Array(32);
+    crypto.getRandomValues(randomPool);
+    var hex = '';
+    for (var i = 0; i < randomPool.length; ++i) {
+        hex += randomPool[i].toString(16);
+    }
+    // E.g. db18458e2782b2b77e36769c569e263a53885a9944dd0a861e5064eac16f1a
+    console.log("THIS USER'S TOKEN IS: ", hex);
+    return hex;
+}
+
+/*
+function ID_check(){
+    userid = chrome.storage.sync.get('userid', function(items) {
+        console.log(items['userid']);
+        userid = items['userid'];
+        
+        if (userid && (typeof userid !== "undefined")) {
+            console.log("this ID exists");
+            //return userid;
+        } else {
+            userid = getRandomToken();
+            chrome.storage.sync.set({userid: userid}, function() {
+                console.log("new ID created");
+            });
+        }
+        console.log("ID CHECK: ", userid)
+        return userid;
+    });
+
+    return userid;
+}
+*/
+
+/*
+port = chrome.runtime.connect(null, {name: 'hi'});      
+   port.onDisconnect.addListener(obj => {
+            console.log('disconnected port');
+    })
 */
 
 function getHistory(){
@@ -22,9 +78,28 @@ function getHistory(){
         function(result){
             //console.log(result);
             list = parseHistory(result);
-            counts = countHistory(list);
+            sendURL(list);
+
+            //counts = countHistory(list);
             
     });
+
+}
+
+function sendURL(jsonfile){
+    var request = new XMLHttpRequest();
+
+    request.open("POST", "http://103.6.254.30/receive", true);
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    console.log("Sending");
+    request.send(jsonfile);
+
+    request.onload = function(){
+        console.log("WE GOT A RESPONSE:", this.responseText);
+    }
+    //chrome.runtime.sendMessage(jsonfile, function(response) {
+    //    console.log(response.message);
+    //  });
 
 }
 
@@ -78,10 +153,12 @@ function parseHistory(result){
         document.body.appendChild(document.createElement('br'));
         */
     }
-    
+    var id = ID_check();
+    output_obj.ID = id;
+    console.log("ID is: ", output_obj.ID);
     var out = JSON.stringify(output_obj);
     document.body.appendChild(document.createTextNode(out));
-    return output_obj;
+    return out;
 }
 
 
@@ -112,5 +189,12 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("dabadee")
     let retrieved = getHistory();
 
-    
 });
+
+/*
+chrome.webRequest.onCompleted.addListener(function(val){
+    console.log("RECEIVED A RESPONSE");
+    console.log(val);
+}, {urls: [target]});
+*/
+
