@@ -61,6 +61,11 @@ class PartisanModel:
         score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
         return score / len(history)
 
+    def z_score_classifier(self, history, state):
+        #State needs to be obtained from 
+        print("Not ready yet")
+
+
     def run(self):
         self.df = pd.read_csv(self.labels, header=0)
         self.counts = self.load_instance(self.input_history, self.input_history_type)

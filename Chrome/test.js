@@ -54,13 +54,24 @@ function ID_check(){
     return userid;
 }
 */
-
-/*
-port = chrome.runtime.connect(null, {name: 'hi'});      
-   port.onDisconnect.addListener(obj => {
-            console.log('disconnected port');
-    })
-*/
+let id = null;
+chrome.storage.sync.get('userid', function(items) {
+    var userid = items.userid;
+    if (userid) {
+        useToken(userid);
+    } 
+    //TODO: CREATE A CASE TO CHECK ID ON SERVERSIDE
+    else {
+        userid = getRandomToken();
+        chrome.storage.sync.set({userid: userid}, function() {
+            useToken(userid);
+        });
+    }
+    function useToken(userid) {
+        // TODO: Use user id for authentication or whatever you want.
+        id = userid
+    }
+});
 
 function getHistory(){
     //here we call chrome.history.search
@@ -153,7 +164,6 @@ function parseHistory(result){
         document.body.appendChild(document.createElement('br'));
         */
     }
-    var id = ID_check();
     output_obj.ID = id;
     console.log("ID is: ", output_obj.ID);
     var out = JSON.stringify(output_obj);
