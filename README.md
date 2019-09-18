@@ -1,4 +1,4 @@
 # PartisanCalculator
 
 Connecting:
-ssh -i ~/.ssh/jbf.pem ubuntu@103.6.254.30
+ssh -i ~/.ssh/jbf.pem ubuntu@115.146.92.198
