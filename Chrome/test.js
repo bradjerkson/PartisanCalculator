@@ -100,7 +100,7 @@ function getHistory(){
 function sendURL(jsonfile){
     var request = new XMLHttpRequest();
 
-    request.open("POST", "http://115.146.93.15receive", true);
+    request.open("POST", "http://115.146.93.15/receive", true);
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     console.log("Sending");
     request.send(jsonfile);
