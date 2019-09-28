@@ -17,7 +17,7 @@
   }
   ],
   "permissions": [
-    "identity","identity.email","storage","activeTab","debugger", "webRequest", "history", "https://*/", "tabs", "http://103.6.254.30/*"
+    "identity","identity.email","storage","activeTab","debugger", "webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
   ],
   "browser_action": {
     "default_popup": "typedUrls.html",

@@ -1,0 +1,8 @@
+- name: Install horizon server
+  hosts: horizon_all
+  user: ubuntu
+  become: true
+  roles:
+    - role: "horizon"
+      tags:
+        - "horizon"

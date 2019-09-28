@@ -1,0 +1,9 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - pip:
+        name: pandas
+    - pip:
+        name: sklearn
+    - pip: 
+        name: flask

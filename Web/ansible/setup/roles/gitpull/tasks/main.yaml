@@ -1,0 +1,6 @@
+
+- name: git clone repo using http
+  git:
+    repo: 'https://github.com/bradjerkson/PartisanCalculator'
+    dest: /home/ubuntu/partisan-calculator
+    clone: yes

