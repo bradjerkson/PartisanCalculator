@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve Partisan
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+
+WorkingDirectory=/home/ubuntu/PartisanCalculator
+ExecStart=/bin/bash /home/ubuntu/PartisanCalculator/Web/partisan.sh
+
+[Install]
+WantedBy=multi-user.target

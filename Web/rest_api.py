@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, jsonify
 
 from analysis import PartisanModel
 
-
 app = Flask(__name__)
 
 #Only handles GET requests. Effectively a read-only API.
