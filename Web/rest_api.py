@@ -17,7 +17,7 @@ def default():
 def receive():
     print("starting")
     req_data = request.get_json(force=True)
-    #print(req_data['id'])
+    print(req_data['ID'])
     if req_data == None:
         return "nothing requested!"
     else:
