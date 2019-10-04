@@ -73,7 +73,7 @@ class PartisanModel:
         print("History: ", self.history)
         if self.history.empty:
             print("Sorry, your browsing history has insufficient data. Keep on browsing!")
-            self.score = "Sorry, your browsing history has insufficient data. Keep on browsing!"
+            self.score = None
         else:
             self.score = self.simple_classifier(self.history, self.scoring)
             print(self.score)

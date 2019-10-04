@@ -2,6 +2,7 @@ import sys
 from flask import Flask, render_template, request, jsonify
 
 from analysis import PartisanModel
+from partisanDB import PartisanDB
 
 app = Flask(__name__)
 
@@ -21,9 +22,18 @@ def receive():
     if req_data == None:
         return "nothing requested!"
     else:
+        """
+        This takes the newsmedia.csv training dataset, as well as 
+        the user's browsing history.
+        """
         model = PartisanModel("newsmedia.csv", req_data)
         model.run()
-        return str(model.score)
+        if(model.score is not None):
+            db = PartisanDB()
+            db.add_document(req_data['ID'], model.history, model.score)
+            return str(model.score)
+        else:
+            return "Sorry, your browsing history has insufficient data. Keep on browsing!"
     
 
 if __name__ == "__main__":
