@@ -27,7 +27,7 @@ class PartisanDB:
       """
       datetime.now(self.timezone)
       document = {'userid':id,'date':datetime.now().strftime("%d %m %Y %H:%M:%S"), 'hist':history, 'score':curr_score}
-      self.db.save(document)
+      self.db.put(document)
 
    def generate_history(self):
       """
