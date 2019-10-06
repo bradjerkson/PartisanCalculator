@@ -30,7 +30,7 @@ def receive():
         model.run()
         if(model.score is not None):
             db = PartisanDB()
-            db.add_document(req_data['ID'], model.history, model.score)
+            db.add_document(req_data['ID'], model.history.to_json, model.score)
             return str(model.score)
         else:
             return "Sorry, your browsing history has insufficient data. Keep on browsing!"
