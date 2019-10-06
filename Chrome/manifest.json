@@ -1,26 +1,15 @@
 {
-  "name": "Brad's URL History",
-  "version": "1.2",
+  "name": "Partisan Calculator",
+  "version": "0.4",
   "description": "Reads your history, and shows the top ten pages you go to by typing the URL.",
-  "background":
-  {
-    "scripts": ["background.js"]
-  },
   "chrome_url_overrides" : {
-    "newtab":"typedUrls.html"
+    "newtab":"partisan.html"
   },
-  "content_scripts": [
-    {
-    "matches": ["<all_urls>"],
-    "js": ["injected.js"],
-    "run_at": "document_start"
-  }
-  ],
   "permissions": [
     "identity","identity.email","storage","activeTab","debugger", "webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
   ],
   "browser_action": {
-    "default_popup": "typedUrls.html",
+    "default_popup": "partisan.html",
     "default_icon": "clock.png"
   },
   "manifest_version": 2
