@@ -6,7 +6,7 @@
     "newtab":"partisan.html"
   },
   "permissions": [
-    "identity", "identity.email","storage","activeTab","webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
+    "identity","storage","activeTab","webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
   ],
   "browser_action": {
     "default_popup": "partisan.html",

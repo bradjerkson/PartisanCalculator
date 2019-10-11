@@ -58,7 +58,7 @@ function parseHistory(result){
         output_obj.urls.push(out_str);
     }
     output_obj.ID = id;
-    //console.log("ID is: ", output_obj.ID);
+    console.log("ID is: ", output_obj.ID);
     var out = JSON.stringify(output_obj);
     document.body.appendChild(document.createTextNode(out));
     return out;
@@ -105,8 +105,6 @@ function sendURL(jsonfile){
 //This section runs the main body.
 
 let id = null;
-
-//TODO: Fix Async Issue
 
 async function generateID(){
     //TODO: CHeck this actually works on other computers
