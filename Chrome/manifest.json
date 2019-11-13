@@ -2,9 +2,6 @@
   "name": "Partisan Calculator",
   "version": "0.4",
   "description": "Reads your history, and shows the top ten pages you go to by typing the URL.",
-  "chrome_url_overrides" : {
-    "newtab":"partisan.html"
-  },
   "permissions": [
     "identity", "identity.email","storage","activeTab","webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
   ],
@@ -12,5 +9,6 @@
     "default_popup": "partisan.html",
     "default_icon": "clock.png"
   },
-  "manifest_version": 2
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' https://d3js.org/ https://ajax.googleapis.com https://maxcdn.bootstrapcdn.com/ https://code.jquery.com/ https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com; object-src 'self'"
 }

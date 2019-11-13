@@ -4,10 +4,102 @@
     <title>Recently Typed URLs</title>
     <style>
       body {min-width: 650px;}
+      body {min-height: 500px;}
     </style>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src='historyScraper.js'></script>
   </head>
-  <body>
-    <div id="typedUrl_div"></div>
+  <body id="PartisanApp">
+    <div id="outerWrapper">
+      <div class="container">
+        <div id="PartisanTitle" class="row justify-content-center">
+          <h1 class="display-3">Partisan Calculator</h1>
+        </div>
+        <div id="PartisanSubtitle" class="row justify-content-center">
+          <p class="text-lg">How our browsing history infers our politics</p>
+        </div>
+        <div class="row justify-content-center">
+          <button type="button" class="btn btn-partisan btn-primary mt-2" id="generateHistoryButton">Generate History</button>
+
+          <div id="typedUrl_div"></div>
+        </div>
+        <div id="insertHere">
+          <!-- This is where we place all the code generated stuff-->
+
+        </div>
+
+        <!-- Modal for Settings -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="termsConditionsModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="settingsModal">Settings</h5>
+                  <button type="button" class="close btn-partisan" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  ...
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-partisan btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-partisan btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- Modal for T&Cs -->
+        <div class="modal fade" id="termsConditionsModal" tabindex="-1" role="dialog" aria-labelledby="termsConditionsModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="termsConditionsModalTitle">Terms & Conditions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="fillerDiv" class = "row pt-5" style="height:200px;">
+          <!-- Filler -->
+          
+        </div>
+
+      </div>
+      <nav id="PartisanNav" class="navbar navbar-custom mt-2 fixed-bottom">
+          <div class="column">
+          <button type="button" class="btn btn-partisan btn-primary" data-toggle="modal" data-target="#settingsModal">
+              <span class="fa fa-cog"></span>
+          </button>  
+          </div>
+
+          <div class="column">
+              <button type="button" class="btn btn-partisan btn-primary" data-toggle="modal" data-target="#termsConditionsModal">
+                  <span class="fa fa-question-circle"></span>
+              </button>  
+              </div>
+    
+      </nav>
+      
+      <!-- Load d3.js -->
+      <script src="https://d3js.org/d3.v4.js"></script>
+      <!-- Load Bootstrap -->
+      <link rel='stylesheet' href='custom.css'>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    </div>
   </body>
 </html>

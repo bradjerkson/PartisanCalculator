@@ -22,6 +22,9 @@ function getRandomToken() {
 function getHistory(){
     //here we call chrome.history.search
     //we make its callback function update our html page
+    console.log("Getting History");
+
+    $("#generateHistoryButton").replaceWith('<button id="generateHistoryButtonLoading" class="btn btn-partisan mt-2" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span></button>');
 
     let seconds = 1000 * 60 * 60 * 24 * 7 * 365;
     let oneYearAgo = (new Date).getTime() - seconds;
@@ -37,6 +40,8 @@ function getHistory(){
             list = parseHistory(result);
             sendURL(list);
     });
+    
+
 }
 
 function parseHistory(result){
@@ -60,7 +65,8 @@ function parseHistory(result){
     output_obj.ID = id;
     //console.log("ID is: ", output_obj.ID);
     var out = JSON.stringify(output_obj);
-    document.body.appendChild(document.createTextNode(out));
+    //this line below generates all browsing history
+    //document.body.appendChild(document.createTextNode(out));
     return out;
 }
 
@@ -95,12 +101,27 @@ function sendURL(jsonfile){
     request.open("POST", target.concat('/receive'), true);
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     console.log("Sending");
-    request.send(jsonfile);
+    //we need to catch any internal server errors here
 
-    request.onload = function(){
-        console.log("WE GOT A RESPONSE:", this.responseText);
+    request.send(jsonfile);
+    
+    if((request.status == 500 || request.status == 502) && request.readyState == 4){
+        console.log("err")
+        publishResults("Sorry, we're unable to reach the server. Try again later");
+    
     }
+    else{
+        request.onload = function(){
+            
+            //this.responseText = parseFloat(this.responseText).toFixed(2);
+            console.log("WE GOT A RESPONSE:", this.responseText);
+            publishResults(parseFloat(this.responseText).toFixed(2));
+            $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
+        }
+    }
+
 }
+
 
 //This section runs the main body.
 
@@ -143,8 +164,10 @@ async function generateEmail(){
 }
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("starting it")
+    console.log("starting it");
+    //generateHomeScreen();
     
     id = generateEmail();
     if( typeof id === 'undefined' || id === null ){
@@ -155,7 +178,46 @@ document.addEventListener('DOMContentLoaded', function () {
     //console.log(typeof(id));
     //console.log(id);
     
-    console.log("Getting History")
-    let retrieved = getHistory();
+    
+    //let retrieved = getHistory();
 
 });
+//We attach our custom listeners here
+
+//document.getElementById("generateHistoryButton").addEventListener("click", getHistory());
+$(document).ready(function () {
+    //generates our history
+    $(document).on('click', '#generateHistoryButton', getHistory);
+  });
+
+
+
+
+//The following code deals with dynamic webpage generation
+
+function publishResults(response){
+    //document.body.appendChild(document.createTextNode("This is your result"));
+    //document.body.appendChild(document.createTextNode(response));
+
+    //d3.select('body').append('h2').text("This is your result");
+    //d3.select('body').append('p').text(response);
+    
+    $('#fillerDiv').remove();
+    if($('#PartisanScoreTitle').length){
+        $('#PartisanScoreTitle').replaceWith("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row>");
+        $('#PartisanScoreValue').replaceWith("<div id='PartisanScoreValue' class='row partisan-text partisan-results rounded mt-2 justify-content-center animated fadeIn'>"+response+"</row>");
+
+    }
+    else{
+        $('#insertHere').append("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row>");
+        $('#insertHere').append("<div id='PartisanScoreValue' class='row partisan-text partisan-results rounded mt-2 justify-content-center animated fadeIn'>"+response+"</row>");
+    }
+}
+
+function generateHomeScreen(){
+    d3.select('body').append('h1').text("Partisan Calculator");
+
+    d3.select('body').append('input');
+
+
+}

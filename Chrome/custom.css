@@ -1,0 +1,48 @@
+#PartisanApp {
+    background-color: #386275;
+}
+
+#outerWrapper {
+    /*background-color: #9b5d53*/
+}
+
+#PartisanTitle{
+    font-family: 'BebasNeue-Regular';
+    color: #1c1d29;
+}
+
+#PartisanSubtitle{
+    font-family: 'FrancophilSans';
+    font-size: 20px;
+}
+
+.partisan-text{
+    font-family: 'FrancophilSans';
+    font-size: 18px;
+}
+
+.btn-partisan{
+    background-color: #9b5d53 !important;
+    border-color: #2f2836 !important;
+    color: #1c1d29 !important;
+}
+
+.partisan-results{
+    background-color: #dcc8b3 !important;
+    border-color: #2f2836 !important;
+    border-width: thick !important;
+}
+
+.navbar-custom{
+    background: #1c1d29;
+}
+
+@font-face{
+    font-family: 'BebasNeue-Regular';
+    src: url('Fonts/BebasNeue-Regular.woff');
+}
+
+@font-face{
+    font-family: 'FrancophilSans';
+    src: url('Fonts/FrancophilSans.ttf');
+}

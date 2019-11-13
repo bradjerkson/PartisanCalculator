@@ -3,7 +3,9 @@ var target = 'http://115.146.93.15';
 
 
 //we want to generate a unique user ID per each chrome extension installed
-
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
 function getRandomToken() {
     // E.g. 8 * 32 = 256 bits token
@@ -58,7 +60,7 @@ function parseHistory(result){
         output_obj.urls.push(out_str);
     }
     output_obj.ID = id;
-    console.log("ID is: ", output_obj.ID);
+    //console.log("ID is: ", output_obj.ID);
     var out = JSON.stringify(output_obj);
     document.body.appendChild(document.createTextNode(out));
     return out;
@@ -110,27 +112,28 @@ async function generateID(){
     //TODO: CHeck this actually works on other computers
     console.log("id start");
     let generateID = null;
-    chrome.storage.sync.get('userid', async function(items) {
-        var userid = items.userid;
-        if ( typeof userid === 'undefined' || userid === null ) {
-            //continue
-            userid = getRandomToken();
-            chrome.storage.sync.set({userid: userid}, function() {
-                //useToken(userid);
-                console.log("creating new Browser ID: ", userid);
-            });
-        } 
-        //TODO: CREATE A CASE TO CHECK ID ON SERVERSIDE
-        else {
-            console.log("browser ID existing: ", userid);
-        }
-        generateID = userid;
-    });
+    userid = browser.storage.local.get("userid");
+    await sleep(3000);
+    console.log("found in storage: ", userid);
+    if (userid === undefined || userid === null ) {
+        //continue
+        userid = getRandomToken();
+        browser.storage.local.set({userid: {id:userid}}, function() {
+            //useToken(userid);
+            console.log("creating new Browser ID: ", userid);
+        });
+    } 
+    //TODO: CREATE A CASE TO CHECK ID ON SERVERSIDE
+    else {
+        console.log("browser ID existing: ", userid.id);
+    }
+    generateID = userid.id;
     console.log("generate ID is: ", generateID);
     return generateID;
 
 }
 
+/*
 async function generateEmail(){
     let email = null
     chrome.identity.getProfileUserInfo(async function(val){
@@ -139,16 +142,20 @@ async function generateEmail(){
     });
     return email;
 }
-
+*/
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("starting it")
     
+    /*
     id = generateEmail();
     if( typeof id === 'undefined' || id === null ){
         id = generateID();
         console.log("id is ", id);
     }
+    */
+    id = generateID();
+    console.log("id is ", id);
 
     //console.log(typeof(id));
     //console.log(id);
