@@ -32,7 +32,7 @@ def receive():
             db = PartisanDB()
             hist_json = model.history.to_json(orient='index')
             db.add_document(req_data['ID'], hist_json, model.score)
-            return "{ score: " + model.score + ", topthree: " + model.top_three + " }"
+            return "{ score: " + str(model.score) + ", topthree: " + str(model.top_three) + " }"
         else:
             return "Sorry, your browsing history has insufficient data. Keep on browsing!"
 
