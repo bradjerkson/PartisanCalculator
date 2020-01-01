@@ -23,7 +23,7 @@ def receive():
         return "nothing requested!"
     else:
         """
-        This takes the newsmedia.csv training dataset, as well as 
+        This takes the newsmedia.csv training dataset, as well as
         the user's browsing history.
         """
         model = PartisanModel("newsmedia.csv", req_data)
@@ -32,11 +32,12 @@ def receive():
             db = PartisanDB()
             hist_json = model.history.to_json(orient='index')
             db.add_document(req_data['ID'], hist_json, model.score)
-            return str(model.score)
+            return "{ score: " + model.score + ", topthree: " + model.top_three + " }"
         else:
             return "Sorry, your browsing history has insufficient data. Keep on browsing!"
-    
+
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
-

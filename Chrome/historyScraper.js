@@ -30,7 +30,7 @@ function getHistory(){
     let oneYearAgo = (new Date).getTime() - seconds;
 
     chrome.history.search({
-        
+
         'text': '',
         'maxResults': MAXRESULT,
         'startTime': oneYearAgo,
@@ -40,7 +40,7 @@ function getHistory(){
             list = parseHistory(result);
             sendURL(list);
     });
-    
+
 
 }
 
@@ -102,23 +102,33 @@ function sendURL(jsonfile){
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     console.log("Sending");
     //we need to catch any internal server errors here
-
+    //refactor as fetch API
     request.send(jsonfile);
-    
-    if((request.status == 500 || request.status == 502) && request.readyState == 4){
-        console.log("err")
-        publishResults("Sorry, we're unable to reach the server. Try again later");
-    
+
+    function XHRErrorHandler(event){
+        console.log("Error");
     }
-    else{
-        request.onload = function(){
-            
-            //this.responseText = parseFloat(this.responseText).toFixed(2);
-            console.log("WE GOT A RESPONSE:", this.responseText);
-            publishResults(parseFloat(this.responseText).toFixed(2));
-            $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
+
+    request.onload = function(){
+
+        //this.responseText = parseFloat(this.responseText).toFixed(2);
+        console.log("WE GOT A RESPONSE:", this.responseText);
+        let temp = parseFloat(this.responseText).toFixed(2);
+        if(Number.isNaN(temp) || temp.equals("NaN")){
+            console.log("We hit NaN");
+            publishResults("FUCK");
         }
+        else{
+            // We need to accomodate for JSON, we now have score and top 3!
+            console.log(typeof(temp));
+            console.log(temp.length);
+            publishResults(temp);
+        }
+
+        $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
     }
+
+
 
 }
 
@@ -142,7 +152,7 @@ async function generateID(){
                 //useToken(userid);
                 console.log("creating new Browser ID: ", userid);
             });
-        } 
+        }
         //TODO: CREATE A CASE TO CHECK ID ON SERVERSIDE
         else {
             console.log("browser ID existing: ", userid);
@@ -168,7 +178,7 @@ async function generateEmail(){
 document.addEventListener('DOMContentLoaded', function () {
     console.log("starting it");
     //generateHomeScreen();
-    
+
     id = generateEmail();
     if( typeof id === 'undefined' || id === null ){
         id = generateID();
@@ -177,8 +187,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //console.log(typeof(id));
     //console.log(id);
-    
-    
+
+
     //let retrieved = getHistory();
 
 });
@@ -201,7 +211,7 @@ function publishResults(response){
 
     //d3.select('body').append('h2').text("This is your result");
     //d3.select('body').append('p').text(response);
-    
+
     $('#fillerDiv').remove();
     if($('#PartisanScoreTitle').length){
         $('#PartisanScoreTitle').replaceWith("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row>");

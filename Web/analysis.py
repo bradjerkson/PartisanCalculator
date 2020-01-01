@@ -5,6 +5,7 @@ import sys
 
 from collections import Counter
 from sklearn.naive_bayes import GaussianNB
+from scipy import stats
 
 class PartisanModel:
     def __init__(self, labels, input_history):
@@ -25,7 +26,7 @@ class PartisanModel:
         }
         self.df = None
         self.counts = None
-
+        self.top_three = None
 
     def full_view(self, df):
         #here we print out every result when printing dataframes
@@ -59,11 +60,19 @@ class PartisanModel:
         zeroes = scores[scores == 0].shape[0]
         #tf-idf?
         score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
+        print("your actual score is: ", score)
+
         return score / len(history)
 
     def z_score_classifier(self, history, state):
-        #State needs to be obtained from 
+        #State needs to be obtained from
         print("Not ready yet")
+
+    def generate_fave_site(self, history, counts):
+        #This generates the user's top 3 news sites
+        top_three = self.history['index'][0:3]
+        output = [top_three[0], top_three[1], top_three[2]]
+        return output
 
 
     def run(self):
@@ -71,6 +80,7 @@ class PartisanModel:
         self.counts = self.load_instance(self.input_history, self.input_history_type)
         self.history = self.generate_user_media_history(self.df, self.counts)
         print("History: ", self.history)
+        self.top_three = self.generate_fave_site(self.history, self.counts)
         if self.history.empty:
             print("Sorry, your browsing history has insufficient data. Keep on browsing!")
             self.score = None
