@@ -1,1 +1,1 @@
-uwsgi rest_api.ini --processes 5
+nohup uwsgi rest_api.ini --processes 5 &

@@ -114,16 +114,10 @@ function sendURL(jsonfile){
         //this.responseText = parseFloat(this.responseText).toFixed(2);
         console.log("WE GOT A RESPONSE:", this.responseText);
         let temp = parseFloat(this.responseText).toFixed(2);
-        if(Number.isNaN(temp) || temp.equals("NaN")){
-            console.log("We hit NaN");
-            publishResults("FUCK");
-        }
-        else{
-            // We need to accomodate for JSON, we now have score and top 3!
-            console.log(typeof(temp));
-            console.log(temp.length);
-            publishResults(temp);
-        }
+        // We need to accomodate for JSON, we now have score and top 3!
+        console.log(typeof(this.responseText));
+        console.log(temp.length);
+        publishResults(this.responseText);
 
         $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
     }
@@ -211,16 +205,52 @@ function publishResults(response){
 
     //d3.select('body').append('h2').text("This is your result");
     //d3.select('body').append('p').text(response);
+    const jsonResponse = JSON.parse(response);
+    console.log(jsonResponse);
+    console.log(jsonResponse["topthree"]);
+
+    const carouselCode = `<div id="PartisanCarouselResults" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <a class="carousel-control-prev align-top" href="#PartisanCarouselResults" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next align-top" href="#PartisanCarouselResults" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+        <div class="carousel-item active text-center">
+          <div id='PartisanScoreTitle1' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>
+          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'>${jsonResponse["score"]}</row></div>
+
+          <br>
+          <button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" data-target="#partisanScoreInfoModal">What does this mean?</button>
+        </div>
+        <div class="carousel-item text-center">
+          <div id='PartisanScoreTitle2' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Top Three New Sites</h3></row></div>
+          <div id='PartisanScoreValue2' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'>${jsonResponse["topthree"].join('<br>')}</row></div>
+          <div></div>
+        </div>
+        <div class="carousel-item text-center">
+          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Placeholder</h3></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'>Filler Results</row></div>
+
+        </div>
+      </div>
+
+  </div>`
 
     $('#fillerDiv').remove();
-    if($('#PartisanScoreTitle').length){
-        $('#PartisanScoreTitle').replaceWith("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row>");
-        $('#PartisanScoreValue').replaceWith("<div id='PartisanScoreValue' class='row partisan-text partisan-results rounded mt-2 justify-content-center animated fadeIn'>"+response+"</row>");
+    if($('#PartisanCarouselResults').length){
+        //$('#PartisanScoreTitle').replaceWith("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>");
+        //$('#PartisanScoreValue').replaceWith("<div id='PartisanScoreValue' class='row partisan-text partisan-results rounded mt-2 justify-content-center animated fadeIn'>"+jsonResponse.score+"</row>");
+        $('#PartisanCarouselResults').replaceWith(carouselCode);
+
 
     }
     else{
-        $('#insertHere').append("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row>");
-        $('#insertHere').append("<div id='PartisanScoreValue' class='row partisan-text partisan-results rounded mt-2 justify-content-center animated fadeIn'>"+response+"</row>");
+        //$('#insertHere').append("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>");
+        $('#insertHere').append(carouselCode);
     }
 }
 

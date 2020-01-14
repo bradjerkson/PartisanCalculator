@@ -25,12 +25,15 @@
     background-color: #D8D8D8 !important;
     border-color: #2f2836 !important;
     color: #1c1d29 !important;
+    margin: auto;
+    text-align: center;
 }
 
 .partisan-results{
     background-color: #dcc8b3 !important;
     border-color: #2f2836 !important;
     border-width: thick !important;
+    height: 100px;
 }
 
 .navbar-custom{
