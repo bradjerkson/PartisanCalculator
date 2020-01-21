@@ -39,13 +39,29 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
+                <form id="disableRecording" method="post">
                 <div class="modal-body">
-                  Disable
+                  <!-- Form inside the modal -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="CheckboxStopRecording24hr">
+                    <label class="form-check-label" for="CheckboxStopRecording24hr"> Stop recording my data (browse without recording anything for 24 hours, or until deselected) </label><br>
+
+                    <input class="form-check-input" type="checkbox" id="CheckboxSixMonthCap">
+                    <label class="form-check-label" for="CheckboxSixMonthCap"> Do not record browsing history older than six months  </label><br>
+
+                    <input class="form-check-input" type="checkbox" id="CheckboxOptOutResearch">
+                    <label class="form-check-label" for="CheckboxOptOutResearch text-danger"> Opt out of the survey (this stops recording and removes existing records) </label><br>
+
+                  </div>
+
+
+
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-partisan btn-secondary" data-dismiss="modal">Close</button>
                   <button type="button" class="btn btn-partisan btn-primary">Save changes</button>
                 </div>
+                </form>
               </div>
             </div>
           </div>
@@ -60,7 +76,7 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
+              <div class="modal-body font-weight-light">
                 The terms below have been provided to you, the participant, at a time prior to undertaking this study. The T&Cs below have been listed for your convenient access. <br>
                 1.	I consent to participate in this project, the details of which have been explained to me, and I have been provided with a written plain language statement to keep. <br>
                 2.	I understand that the topics used in the project are related to contemporary news items and include politics (liberal and conservative views), religion (secular and religious views), societal issues and climate change.<br>
@@ -82,7 +98,7 @@
 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-partisan btn-primary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -91,7 +107,7 @@
         <!-- Modal to explain the partisan score -->
         <div class="modal fade" id="partisanScoreInfoModal" tabindex="-1" role="dialog" aria-labelledby="partisanScoreInfoModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" id="partisanScoreInfoModalContent">
               <div class="modal-header">
                 <h5 class="modal-title" id="partisanScoreInfoModalLabel">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -99,7 +115,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                This is the partisan score yo
+                This value is aggregated based on other participants scores, with 0 being the average.
+                Negative values indicate being positioned to the left, politically. Whereas positive values indicate the right.
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

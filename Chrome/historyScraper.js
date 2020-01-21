@@ -209,7 +209,9 @@ function publishResults(response){
     console.log(jsonResponse);
     console.log(jsonResponse["topthree"]);
 
-    const carouselCode = `<div id="PartisanCarouselResults" class="carousel slide" data-ride="carousel">
+    const carouselInfoButton = '<button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" display=none data-target="#partisanScoreInfoModal">Info</button>'
+
+    const carouselCode = `<div id="PartisanCarouselResults" class="carousel slide" data-ride="carousel" data-interval="false">
       <div class="carousel-inner">
         <a class="carousel-control-prev align-top" href="#PartisanCarouselResults" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -221,20 +223,27 @@ function publishResults(response){
         </a>
         <div class="carousel-item active text-center">
           <div id='PartisanScoreTitle1' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>
-          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'>${jsonResponse["score"]}</row></div>
+          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">${jsonResponse["score"].toFixed(2)}</div></row></div>
+          ${carouselInfoButton}
 
-          <br>
-          <button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" data-target="#partisanScoreInfoModal">What does this mean?</button>
         </div>
         <div class="carousel-item text-center">
-          <div id='PartisanScoreTitle2' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Top Three New Sites</h3></row></div>
-          <div id='PartisanScoreValue2' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'>${jsonResponse["topthree"].join('<br>')}</row></div>
-          <div></div>
+          <div id='PartisanScoreTitle2' class='row partisan-text rounded mt-5 justify-content-center'><h3>Top Three News Sites</h3></row></div>
+          <div id='PartisanScoreValue2' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">${jsonResponse["topthree"].join('<br>')}</div></row></div>
+
+          ${carouselInfoButton}
         </div>
         <div class="carousel-item text-center">
-          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Placeholder</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'>Filler Results</row></div>
+          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score Over Time</h3></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Filler Results</div></row></div>
 
+          ${carouselInfoButton}
+        </div>
+        <div class="carousel-item text-center">
+          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>How You Compare To Other Users</h3></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Filler Results</div></row></div>
+
+          ${carouselInfoButton}
         </div>
       </div>
 

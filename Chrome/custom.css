@@ -1,5 +1,6 @@
 #PartisanApp {
-    background-color: #386275;
+    /*background-color: #386275;*/
+    background-color: #74b9ff;
 }
 
 #outerWrapper {
@@ -16,13 +17,26 @@
     font-size: 20px;
 }
 
+#partisanScoreInfoModalContent{
+  background-color: #74b9ff;
+
+}
+
+#settingsModal{
+  background-color: #74b9ff;
+}
+
+#termsConditionsModal{
+  background-color: #74b9ff;
+}
+
 .partisan-text{
     font-family: 'FrancophilSans';
     font-size: 18px;
 }
 
 .btn-partisan{
-    background-color: #D8D8D8 !important;
+    background-color: #00b894 !important;
     border-color: #2f2836 !important;
     color: #1c1d29 !important;
     margin: auto;
@@ -30,7 +44,7 @@
 }
 
 .partisan-results{
-    background-color: #dcc8b3 !important;
+    background-color: #ffeaa7 !important;
     border-color: #2f2836 !important;
     border-width: thick !important;
     height: 100px;
