@@ -209,6 +209,8 @@ function publishResults(response){
     console.log(jsonResponse);
     console.log(jsonResponse["topthree"]);
 
+    var alignment = partisanScoreToAlignment(jsonResponse["score"]);
+
     const carouselInfoButton = '<button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" display=none data-target="#partisanScoreInfoModal">Info</button>'
 
     const carouselCode = `<div id="PartisanCarouselResults" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -222,20 +224,20 @@ function publishResults(response){
           <span class="sr-only">Next</span>
         </a>
         <div class="carousel-item active text-center">
-          <div id='PartisanScoreTitle1' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>
-          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">${jsonResponse["score"].toFixed(2)}</div></row></div>
+          <div id='PartisanScoreTitle1' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Alignment</h3></row></div>
+          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="PartisanScoreValueOutput1" class="my-auto">${alignment}</div></row></div>
           ${carouselInfoButton}
 
         </div>
         <div class="carousel-item text-center">
-          <div id='PartisanScoreTitle2' class='row partisan-text rounded mt-5 justify-content-center'><h3>Top Three News Sites</h3></row></div>
+          <div id='PartisanScoreTitle2' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Top Three News Sites</h3></row></div>
           <div id='PartisanScoreValue2' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">${jsonResponse["topthree"].join('<br>')}</div></row></div>
 
           ${carouselInfoButton}
         </div>
         <div class="carousel-item text-center">
           <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score Over Time</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Filler Results</div></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto">Filler Text</div></row></div>
 
           ${carouselInfoButton}
         </div>
@@ -261,7 +263,80 @@ function publishResults(response){
         //$('#insertHere').append("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>");
         $('#insertHere').append(carouselCode);
     }
+
+    generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
 }
+
+function partisanScoreToAlignment(partisanValue){
+  var whole = Math.round(partisanValue);
+  console.log(whole);
+
+  var dict = {
+    3: "Far Right",
+    2: "Right",
+    1: "Right-Centre",
+    0: "Centrist",
+    1: "Left-Centre",
+    2: "Left",
+    3: "Far Left"
+  };
+
+  if(whole > 3){
+    return "Far Right";
+  }
+  else if (whole < -3){
+    return "Far Left";
+  }
+  else{
+    return dict[whole]
+  }
+}
+
+function generatePartisanScaleResult(partisanvalue){
+  var width = 400,
+      height = 100;
+
+  var data = [-3, -2, -1, 0, 1, 2, 3];
+
+
+  // Append SVG
+  var svg = d3.select("#PartisanScoreValueOutput1")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height)
+              .attr("display", "block")
+              .attr("margin", "auto")
+              .attr("align", "center")
+
+
+  // Create scale
+  var scale = d3.scaleLinear()
+                .domain([-3,3])
+                .range([0, width-100]);
+
+  console.log("creating partisan scale");
+  console.log(scale(partisanvalue));
+
+  var bar1 = svg.append("rect")
+        .attr("fill", "blue")
+        .attr("x", scale(partisanvalue))
+        .attr("y", 0)
+        .attr("height", 30)
+        .attr("width", 2)
+
+  // Add scales to axis
+  var x_axis = d3.axisBottom()
+                 .scale(scale)
+                 .tickValues(data);
+
+  //Append group and insert axis
+  svg.append("g")
+     .call(x_axis);
+
+  d3.select("g").style('transform', 'translate(10%,10%)')
+}
+
+
 
 function generateHomeScreen(){
     d3.select('body').append('h1').text("Partisan Calculator");
