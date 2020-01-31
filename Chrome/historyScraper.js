@@ -208,6 +208,7 @@ function publishResults(response){
     const jsonResponse = JSON.parse(response);
     console.log(jsonResponse);
     console.log(jsonResponse["topthree"]);
+    console.log(jsonResonse["topthreeveracity"]);
 
     var alignment = partisanScoreToAlignment(jsonResponse["score"]);
 
@@ -225,7 +226,7 @@ function publishResults(response){
         </a>
         <div class="carousel-item active text-center">
           <div id='PartisanScoreTitle1' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Alignment</h3></row></div>
-          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="PartisanScoreValueOutput1" class="my-auto">${alignment}</div></row></div>
+          <div id='PartisanScoreValue1' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="PartisanScoreValueOutput1" class="my-auto"><div class="fade-in">${alignment}</div></div></row></div>
           ${carouselInfoButton}
 
         </div>
@@ -268,6 +269,7 @@ function publishResults(response){
 }
 
 function partisanScoreToAlignment(partisanValue){
+  console.log(partisanValue);
   var whole = Math.round(partisanValue);
   console.log(whole);
 
@@ -319,10 +321,13 @@ function generatePartisanScaleResult(partisanvalue){
 
   var bar1 = svg.append("rect")
         .attr("fill", "blue")
-        .attr("x", scale(partisanvalue))
+        .attr("x", 600)
         .attr("y", 0)
         .attr("height", 30)
         .attr("width", 2)
+
+
+
 
   // Add scales to axis
   var x_axis = d3.axisBottom()
@@ -333,6 +338,12 @@ function generatePartisanScaleResult(partisanvalue){
   svg.append("g")
      .call(x_axis);
 
+  //animation to land the bar on your score
+  bar1
+    .transition()
+    .attr("x",scale(partisanvalue))
+    .duration(4000)
+    .ease(d3.easeElastic);
   d3.select("g").style('transform', 'translate(10%,10%)')
 }
 

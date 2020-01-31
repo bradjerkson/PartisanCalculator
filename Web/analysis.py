@@ -27,6 +27,7 @@ class PartisanModel:
         self.df = None
         self.counts = None
         self.top_three = None
+        self.top_three_veracity = None
 
     def full_view(self, df):
         #here we print out every result when printing dataframes
@@ -74,6 +75,14 @@ class PartisanModel:
         output = [top_three[0], top_three[1], top_three[2]]
         return output
 
+    def fave_sites_veracity(self, history):
+        output = []
+        for site in self.top_three:
+            site_info = history.loc[history['index'] == site]
+            output.append(site_info['fact'].values[0])
+        print(output)
+        return output
+
 
     def run(self):
         self.df = pd.read_csv(self.labels, header=0)
@@ -81,6 +90,7 @@ class PartisanModel:
         self.history = self.generate_user_media_history(self.df, self.counts)
         print("History: ", self.history)
         self.top_three = self.generate_fave_site(self.history, self.counts)
+        self.top_three_veracity = self.fave_sites_veracity(self.history)
         if self.history.empty:
             print("Sorry, your browsing history has insufficient data. Keep on browsing!")
             self.score = None
