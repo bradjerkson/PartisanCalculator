@@ -208,9 +208,24 @@ function publishResults(response){
     const jsonResponse = JSON.parse(response);
     console.log(jsonResponse);
     console.log(jsonResponse["topthree"]);
-    console.log(jsonResonse["topthreeveracity"]);
+    console.log(jsonResponse["topthreeveracity"]);
+
+    //Enable tooltips
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
 
     var alignment = partisanScoreToAlignment(jsonResponse["score"]);
+    var content_veracity = jsonResponse["topthreeveracity"];
+
+    var i;
+    var topThree = "";
+    for (i = 0; i < 3; i++) {
+        topThree = topThree + "<a href='#' data-toggle='tooltip' title='Content Reliability: " + content_veracity[i] + "' >" + jsonResponse['topthree'][i] + "</a><br>"
+    }
+    console.log(topThree);
+    //const topThree = `<a href="#" data-toggle='tooltip' title='Content Reliability: ${content_veracity[0]}'> ${jsonResponse['topthree'][0]}</a><br>`
+
 
     const carouselInfoButton = '<button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" display=none data-target="#partisanScoreInfoModal">Info</button>'
 
@@ -232,7 +247,7 @@ function publishResults(response){
         </div>
         <div class="carousel-item text-center">
           <div id='PartisanScoreTitle2' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Top Three News Sites</h3></row></div>
-          <div id='PartisanScoreValue2' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">${jsonResponse["topthree"].join('<br>')}</div></row></div>
+          <div id='PartisanScoreValue2' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">${topThree}</div></row></div>
 
           ${carouselInfoButton}
         </div>
