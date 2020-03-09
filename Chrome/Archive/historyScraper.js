@@ -132,7 +132,7 @@ function sendURL(jsonfile, id){
 
 
 //TODO: Fix Async Issue
-/*
+
 async function generateID(){
     //TODO: CHeck this actually works on other computers
     console.log("id start");
@@ -155,8 +155,17 @@ async function generateID(){
     });
     console.log("generate ID is: ", generateID);
     return generateID;
+
 }
 
+async function generateEmail(){
+    let email = null
+    chrome.identity.getProfileUserInfo(async function(val){
+        email = val.email;
+        console.log("email is ",email);
+    });
+    return email;
+}
 
 function getEmailPromise(){
   return new Promise(function(resolve, reject){
@@ -165,39 +174,23 @@ function getEmailPromise(){
     });
   });
 }
-*/
-
-function generateID(){
-  let generateID = null;
-  //we create an ID for this browser instance.
-  if (localStorage.getItem("userid") === null){
-      userid = getRandomToken();
-      localStorage.setItem("userid", userid);
-  }
-  else{
-    userid = localStorage.getItem("userid");
-  }
-  console.log("userid is: ", userid);
-  return userid;
-}
 
 
-var id = null;
 
 document.addEventListener('DOMContentLoaded', function () {
+    console.log("starting it");
+    //generateHomeScreen();
 
-  console.log("starting it");
-  //generateHomeScreen();
+    //id = generateEmail();
+    var id = getEmailPromise();
+    console.log("here is our email: ", id);
 
-  //id = generateEmail();
-  id = generateID();
+    console.log("id right after starting is ", id);
+    if( typeof id === 'undefined' || id === null ){
+        id = generateID();
+        console.log("id is ", id);
+    }
 
-
-  console.log("id right after starting is ", id);
-  if( typeof id === 'undefined' || id === null ){
-      id = generateID();
-      console.log("ID as opposed to email is ", id);
-  }
 
     //console.log(typeof(id));
     //console.log(id);
@@ -211,9 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
 //document.getElementById("generateHistoryButton").addEventListener("click", getHistory());
 $(document).ready(function () {
     //generates our history
-    $(document).on('click', '#generateHistoryButton', function(){
-      getHistory(id);
-    });
+    $(document).on('click', '#generateHistoryButton', getHistory(id));
   });
 
 

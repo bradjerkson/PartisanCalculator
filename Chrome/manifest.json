@@ -6,8 +6,7 @@
     "identity", "identity.email","storage","activeTab","webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
   ],
   "browser_action": {
-    "default_popup": "partisan.html",
-    "default_icon": "clock.png"
+    "default_popup": "partisan.html"
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' https://d3js.org/ https://ajax.googleapis.com https://maxcdn.bootstrapcdn.com/ https://code.jquery.com/ https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com; object-src 'self'"
