@@ -93,6 +93,7 @@ function parseURL(url) {
         searchObject: searchObject,
         hash: parser.hash
     };
+    //vell broke this
 }
 
 function sendURL(jsonfile, id){
@@ -128,48 +129,8 @@ function sendURL(jsonfile, id){
 }
 
 
-//This section runs the main body.
-
-
-//TODO: Fix Async Issue
-/*
-async function generateID(){
-    //TODO: CHeck this actually works on other computers
-    console.log("id start");
-    let generateID = null;
-    chrome.storage.sync.get('userid', async function(items) {
-        var userid = items.userid;
-        if ( typeof userid === 'undefined' || userid === null ) {
-            //continue
-            userid = getRandomToken();
-            chrome.storage.sync.set({userid: userid}, function() {
-                //useToken(userid);
-                console.log("creating new Browser ID: ", userid);
-            });
-        }
-        //TODO: CREATE A CASE TO CHECK ID ON SERVERSIDE
-        else {
-            console.log("browser ID existing: ", userid);
-        }
-        generateID = userid;
-    });
-    console.log("generate ID is: ", generateID);
-    return generateID;
-}
-
-
-function getEmailPromise(){
-  return new Promise(function(resolve, reject){
-    chrome.identity.getProfileUserInfo(function(userinfo){
-      resolve(userinfo.email);
-    });
-  });
-}
-*/
-
 function generateID(){
   let generateID = null;
-  //we create an ID for this browser instance.
   if (localStorage.getItem("userid") === null){
       userid = getRandomToken();
       localStorage.setItem("userid", userid);
@@ -187,9 +148,6 @@ var id = null;
 document.addEventListener('DOMContentLoaded', function () {
 
   console.log("starting it");
-  //generateHomeScreen();
-
-  //id = generateEmail();
   id = generateID();
 
 
@@ -198,12 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
       id = generateID();
       console.log("ID as opposed to email is ", id);
   }
-
-    //console.log(typeof(id));
-    //console.log(id);
-
-
-    //let retrieved = getHistory();
 
 });
 //We attach our custom listeners here

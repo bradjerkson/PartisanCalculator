@@ -36,5 +36,6 @@ class PartisanDB:
 
    def generate_history_user(self, id):
       """
-      TODO: Generates history of specific user
+      TODO: Generates history of specific user over time
       """
+      
