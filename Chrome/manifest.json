@@ -1,7 +1,8 @@
 {
-  "name": "Partisan Calculator",
-  "version": "0.4",
-  "description": "Reads your history, and shows the top ten pages you go to by typing the URL.",
+  "name": "Partisan Gauge",
+  "version": "0.8.0",
+  "description": "Determines your 'partisan alignment', based on news sites accessed in your browsing history",
+  "icons": {"128" : "128.png"},
   "permissions": [
     "identity", "identity.email","storage","activeTab","webRequest", "history", "https://*/", "tabs", "http://115.146.93.15/*"
   ],

@@ -93,7 +93,6 @@ function parseURL(url) {
         searchObject: searchObject,
         hash: parser.hash
     };
-    //vell broke this
 }
 
 function sendURL(jsonfile, id){
@@ -227,13 +226,13 @@ function publishResults(response){
         </div>
         <div class="carousel-item text-center">
           <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score Over Time</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto">Filler Text</div></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto">Feature in-progress for part 2 of the study</div></row></div>
 
           ${carouselInfoButton}
         </div>
         <div class="carousel-item text-center">
           <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>How You Compare To Other Users</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Filler Results</div></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Feature in-progress for part 2 of the study</div></row></div>
 
           ${carouselInfoButton}
         </div>
