@@ -22,17 +22,29 @@
 
 }
 
-#settingsModal{
+#settingsModalContent{
   background-color: #74b9ff;
+  font-size: 12px;
 }
 
-#termsConditionsModal{
+#termsConditionsModalContent{
   background-color: #74b9ff;
+  font-size: 12px;
+}
+
+#PartisanNavMTurk{
+  color: white;
+  font-size: 10px;
 }
 
 .partisan-text{
     font-family: 'FrancophilSans';
     font-size: 18px;
+}
+
+.partisan-error-text{
+    text-align: center;
+    margin: auto;
 }
 
 .btn-partisan{

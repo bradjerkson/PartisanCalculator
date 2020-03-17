@@ -3,6 +3,23 @@ var target = 'http://115.146.93.15';
 
 
 //we want to generate a unique user ID per each chrome extension installed
+let stopRecording = false;
+
+
+
+$(function(){
+  $('#checkbox-stoprecording').change(function() {
+    if (stopRecording == false){
+      stopRecording = true;
+    }
+    else{
+      stopRecording = false;
+    }
+    console.log("updating setting to :", stopRecording);
+    localStorage.setItem("stopRecording", stopRecording);
+
+  })
+})
 
 
 function getRandomToken() {
@@ -38,7 +55,22 @@ function getHistory(id){
         function(result){
             //console.log(result);
             list = parseHistory(result);
-            sendURL(list, id);
+            if(stopRecording){
+              if (localStorage.getItem("latestResults") === null){
+                const errorNoData = `<div class="partisan-results"><div class="partisan-text partisan-error-text">Unfortunately, we have insufficient data! Ensure data collection is enabled in Settings, and keep on browsing!</div></div>`
+                $('#insertHere').append(errorNoData);
+              }
+              else{
+                responseText = localStorage.getItem("latestResults");
+                console.log("WE GOT A RESPONSE:", responseText);
+                publishResults(responseText);
+                $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
+              }
+            }
+            else{
+              sendURL(list, id);
+            }
+
     });
 
 
@@ -115,6 +147,7 @@ function sendURL(jsonfile, id){
         //this.responseText = parseFloat(this.responseText).toFixed(2);
         console.log("WE GOT A RESPONSE:", this.responseText);
         let temp = parseFloat(this.responseText).toFixed(2);
+        localStorage.setItem("latestResults", this.responseText);
         // We need to accomodate for JSON, we now have score and top 3!
         console.log(typeof(this.responseText));
         console.log(temp.length);
@@ -132,11 +165,13 @@ function generateID(){
   let generateID = null;
   if (localStorage.getItem("userid") === null){
       userid = getRandomToken();
+      userid = `${returnRandomAnimalName()}-${userid}`;
       localStorage.setItem("userid", userid);
   }
   else{
     userid = localStorage.getItem("userid");
   }
+
   console.log("userid is: ", userid);
   return userid;
 }
@@ -162,6 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
 //document.getElementById("generateHistoryButton").addEventListener("click", getHistory());
 $(document).ready(function () {
     //generates our history
+    if(localStorage.getItem("stopRecording") == "true"){
+      retrieveToggleSettings();
+    }
+
     $(document).on('click', '#generateHistoryButton', function(){
       getHistory(id);
     });
@@ -253,6 +292,19 @@ function publishResults(response){
         $('#insertHere').append(carouselCode);
     }
 
+    console.log("userid is now: ", userid)
+    let partisanNavMTurk = ""
+    if(stopRecording){
+      partisanNavMTurk = `<div class="column" id="PartisanNavMTurk"> Data Collection Disabled for 24 Hours </div>`
+    }
+    else{
+      partisanNavMTurk = `<div class="column" id="PartisanNavMTurk"> MTurk ID: ${userid} </div>`
+    }
+    $('#PartisanNavMTurk').replaceWith(partisanNavMTurk);
+
+
+
+
     generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
 }
 
@@ -343,4 +395,17 @@ function generateHomeScreen(){
     d3.select('body').append('input');
 
 
+}
+
+function returnRandomAnimalName(){
+  //https://github.com/boennemann/animals
+  animals = ['aardvark', 'albatross', 'alligator', 'alpaca', 'ant', 'anteater', 'antelope', 'ape', 'armadillo', 'baboon', 'badger', 'barracuda', 'bat', 'bear', 'beaver', 'bee', 'bison', 'boar', 'buffalo', 'butterfly', 'camel', 'capybara', 'caribou', 'cassowary', 'cat', 'caterpillar', 'cattle', 'chamois', 'cheetah', 'chicken', 'chimpanzee', 'chinchilla', 'chough', 'clam', 'cobra', 'cockroach', 'cod', 'cormorant', 'coyote', 'crab', 'crane', 'crocodile', 'crow', 'curlew', 'deer', 'dinosaur', 'dog', 'dogfish', 'dolphin', 'donkey', 'dotterel', 'dove', 'dragonfly', 'duck', 'dugong', 'dunlin', 'eagle', 'echidna', 'eel', 'eland', 'elephant', 'elephant-seal', 'elk', 'emu', 'falcon', 'ferret', 'finch', 'fish', 'flamingo', 'fly', 'fox', 'frog', 'gaur', 'gazelle', 'gerbil', 'giant-panda', 'giraffe', 'gnat', 'gnu', 'goat', 'goose', 'goldfinch', 'goldfish', 'gorilla', 'goshawk', 'grasshopper', 'grouse', 'guanaco', 'guinea-fowl', 'guinea-pig', 'gull', 'hamster', 'hare', 'hawk', 'hedgehog', 'heron', 'herring', 'hippopotamus', 'hornet', 'horse', 'human', 'hummingbird', 'hyena', 'ibex', 'ibis', 'jackal', 'jaguar', 'jay', 'jellyfish', 'kangaroo', 'kingfisher', 'koala', 'komodo-dragon', 'kookabura', 'kouprey', 'kudu', 'lapwing', 'lark', 'lemur', 'leopard', 'lion', 'llama', 'lobster', 'locust', 'loris', 'louse', 'lyrebird', 'magpie', 'mallard', 'manatee', 'mandrill', 'mantis', 'marten', 'meerkat', 'mink', 'mole', 'mongoose', 'monkey', 'moose', 'mouse', 'mosquito', 'mule', 'narwhal', 'newt', 'nightingale', 'octopus', 'okapi', 'opossum', 'oryx', 'ostrich', 'otter', 'owl', 'ox', 'oyster', 'panther', 'parrot', 'partridge', 'peafowl', 'pelican', 'penguin', 'pheasant', 'pig', 'pigeon', 'polar-bear', 'pony', 'porcupine', 'porpoise', 'prairie-dog', 'quail', 'quelea', 'quetzal', 'rabbit', 'raccoon', 'rail', 'ram', 'rat', 'raven', 'red-deer', 'red-panda', 'reindeer', 'rhinoceros', 'rook', 'salamander', 'salmon', 'sand-dollar', 'sandpiper', 'sardine', 'scorpion', 'sea-lion', 'sea-urchin', 'seahorse', 'seal', 'shark', 'sheep', 'shrew', 'skunk', 'snail', 'snake', 'sparrow', 'spider', 'spoonbill', 'squid', 'squirrel', 'starling', 'stingray', 'stinkbug', 'stork', 'swallow', 'swan', 'tapir', 'tarsier', 'termite', 'tiger', 'toad', 'trout', 'turkey', 'turtle', 'vicuña', 'viper', 'vulture', 'wallaby', 'walrus', 'wasp', 'water-buffalo', 'weasel', 'whale', 'wolf', 'wolverine', 'wombat', 'woodcock', 'woodpecker', 'worm', 'wren', 'yak', 'zebra']
+
+  return animals[Math.floor(Math.random()*animals.length)]
+}
+
+function retrieveToggleSettings(){
+  //TODO: Fix Toggle Issues
+  stopRecording = true;
+  $('#checkbox-stoprecording').replaceWith(`<input id="checkbox-stoprecording" type="checkbox" checked data-toggle="toggle" data-size="sm" >`)
 }
