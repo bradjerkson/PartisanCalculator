@@ -4,22 +4,10 @@ var target = 'http://115.146.93.15';
 
 //we want to generate a unique user ID per each chrome extension installed
 let stopRecording = false;
+console.log("Starting setting for recording: ", localStorage.getItem("stopRecording"));
 
 
 
-$(function(){
-  $('#checkbox-stoprecording').change(function() {
-    if (stopRecording == false){
-      stopRecording = true;
-    }
-    else{
-      stopRecording = false;
-    }
-    console.log("updating setting to :", stopRecording);
-    localStorage.setItem("stopRecording", stopRecording);
-
-  })
-})
 
 
 function getRandomToken() {
@@ -194,12 +182,36 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 //We attach our custom listeners here
 
-//document.getElementById("generateHistoryButton").addEventListener("click", getHistory());
+//Things to execute upon the document fully loading
 $(document).ready(function () {
-    //generates our history
+    //Generates our previous settings
     if(localStorage.getItem("stopRecording") == "true"){
+      console.log("retrieving toggle settings");
+      stopRecording = true;
       retrieveToggleSettings();
     }
+
+    /*
+    This section below acts as a listener for whenever the stopRecording
+    toggle is flicked. */
+    $(function(){
+      $('#checkbox-stoprecording').change(function() {
+        if (stopRecording == false){
+          stopRecording = true;
+        }
+        else{
+          stopRecording = false;
+        }
+        console.log("updating setting to :", stopRecording);
+        localStorage.setItem("stopRecording", stopRecording);
+
+      })
+    })
+
+    /*
+    This section below generates the opt-out link with unique user ID */
+    $('#optOutLink').replaceWith(`<a title="Contact us at jbf@student.unimelb.edu.au to opt out" target="_top" href=mailto:jbf@student.unimelb.edu.au?subject=User%20Opt%20Out%20Request&body=${id}%20requesting%20to%20withdraw%20from%20survey>Opt out of the survey</a>`)
+
 
     $(document).on('click', '#generateHistoryButton', function(){
       getHistory(id);
@@ -405,7 +417,5 @@ function returnRandomAnimalName(){
 }
 
 function retrieveToggleSettings(){
-  //TODO: Fix Toggle Issues
-  stopRecording = true;
   $('#checkbox-stoprecording').replaceWith(`<input id="checkbox-stoprecording" type="checkbox" checked data-toggle="toggle" data-size="sm" >`)
 }
