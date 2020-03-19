@@ -10,5 +10,5 @@
     "default_popup": "partisan.html"
   },
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' https://d3js.org/ https://ajax.googleapis.com https://maxcdn.bootstrapcdn.com/ https://code.jquery.com/ https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com https://cdn.jsdelivr.net/; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://maxcdn.bootstrapcdn.com/; object-src 'self'"
 }

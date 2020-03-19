@@ -1,4 +1,5 @@
 const MAXRESULT = 1000000
+//Our server
 var target = 'http://115.146.93.15';
 
 

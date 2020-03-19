@@ -83,10 +83,10 @@
 
 @font-face{
     font-family: 'BebasNeue-Regular';
-    src: url('Fonts/BebasNeue-Regular.woff');
+    src: url('../Fonts/BebasNeue-Regular.woff');
 }
 
 @font-face{
     font-family: 'FrancophilSans';
-    src: url('Fonts/FrancophilSans.ttf');
+    src: url('../Fonts/FrancophilSans.ttf');
 }
