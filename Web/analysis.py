@@ -89,11 +89,13 @@ class PartisanModel:
         self.counts = self.load_instance(self.input_history, self.input_history_type)
         self.history = self.generate_user_media_history(self.df, self.counts)
         print("History: ", self.history)
-        self.top_three = self.generate_fave_site(self.history, self.counts)
-        self.top_three_veracity = self.fave_sites_veracity(self.history)
+        #We need to pull the plug here, upon failure.
         if self.history.empty:
             print("Sorry, your browsing history has insufficient data. Keep on browsing!")
             self.score = None
         else:
             self.score = self.simple_classifier(self.history, self.scoring)
             print(self.score)
+
+        self.top_three = self.generate_fave_site(self.history, self.counts)
+        self.top_three_veracity = self.fave_sites_veracity(self.history)
