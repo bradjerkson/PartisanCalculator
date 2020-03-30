@@ -95,7 +95,6 @@ class PartisanModel:
             self.score = None
         else:
             self.score = self.simple_classifier(self.history, self.scoring)
+            self.top_three = self.generate_fave_site(self.history, self.counts)
+            self.top_three_veracity = self.fave_sites_veracity(self.history)
             print(self.score)
-
-        self.top_three = self.generate_fave_site(self.history, self.counts)
-        self.top_three_veracity = self.fave_sites_veracity(self.history)
