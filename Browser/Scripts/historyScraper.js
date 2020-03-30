@@ -1,16 +1,27 @@
 const MAXRESULT = 1000000
 //Our server
 var target = 'http://115.146.93.15';
-
+var id = null;
+const errorNoData = `<div class="partisan-results"><div class="partisan-text partisan-error-text">Unfortunately, we have insufficient data! Ensure data collection is enabled in Settings, and keep on expanding your browsing history!</div></div>`
 
 //we want to generate a unique user ID per each chrome extension installed
 let stopRecording = false;
 console.log("Starting setting for recording: ", localStorage.getItem("stopRecording"));
 
+//Part of our mechanism to store/retrieve options data
+function retrieveToggleSettings(){
+  $('#checkbox-stoprecording').replaceWith(`<input id="checkbox-stoprecording" type="checkbox" checked data-toggle="toggle" data-size="sm" >`)
+}
 
+//Utility function to generate our MTurk string for reward redemption
+function returnRandomAnimalName(){
+  //https://github.com/boennemann/animals
+  animals = ['aardvark', 'albatross', 'alligator', 'alpaca', 'ant', 'anteater', 'antelope', 'ape', 'armadillo', 'baboon', 'badger', 'barracuda', 'bat', 'bear', 'beaver', 'bee', 'bison', 'boar', 'buffalo', 'butterfly', 'camel', 'capybara', 'caribou', 'cassowary', 'cat', 'caterpillar', 'cattle', 'chamois', 'cheetah', 'chicken', 'chimpanzee', 'chinchilla', 'chough', 'clam', 'cobra', 'cockroach', 'cod', 'cormorant', 'coyote', 'crab', 'crane', 'crocodile', 'crow', 'curlew', 'deer', 'dinosaur', 'dog', 'dogfish', 'dolphin', 'donkey', 'dotterel', 'dove', 'dragonfly', 'duck', 'dugong', 'dunlin', 'eagle', 'echidna', 'eel', 'eland', 'elephant', 'elephant-seal', 'elk', 'emu', 'falcon', 'ferret', 'finch', 'fish', 'flamingo', 'fly', 'fox', 'frog', 'gaur', 'gazelle', 'gerbil', 'giant-panda', 'giraffe', 'gnat', 'gnu', 'goat', 'goose', 'goldfinch', 'goldfish', 'gorilla', 'goshawk', 'grasshopper', 'grouse', 'guanaco', 'guinea-fowl', 'guinea-pig', 'gull', 'hamster', 'hare', 'hawk', 'hedgehog', 'heron', 'herring', 'hippopotamus', 'hornet', 'horse', 'human', 'hummingbird', 'hyena', 'ibex', 'ibis', 'jackal', 'jaguar', 'jay', 'jellyfish', 'kangaroo', 'kingfisher', 'koala', 'komodo-dragon', 'kookabura', 'kouprey', 'kudu', 'lapwing', 'lark', 'lemur', 'leopard', 'lion', 'llama', 'lobster', 'locust', 'loris', 'louse', 'lyrebird', 'magpie', 'mallard', 'manatee', 'mandrill', 'mantis', 'marten', 'meerkat', 'mink', 'mole', 'mongoose', 'monkey', 'moose', 'mouse', 'mosquito', 'mule', 'narwhal', 'newt', 'nightingale', 'octopus', 'okapi', 'opossum', 'oryx', 'ostrich', 'otter', 'owl', 'ox', 'oyster', 'panther', 'parrot', 'partridge', 'peafowl', 'pelican', 'penguin', 'pheasant', 'pig', 'pigeon', 'polar-bear', 'pony', 'porcupine', 'porpoise', 'prairie-dog', 'quail', 'quelea', 'quetzal', 'rabbit', 'raccoon', 'rail', 'ram', 'rat', 'raven', 'red-deer', 'red-panda', 'reindeer', 'rhinoceros', 'rook', 'salamander', 'salmon', 'sand-dollar', 'sandpiper', 'sardine', 'scorpion', 'sea-lion', 'sea-urchin', 'seahorse', 'seal', 'shark', 'sheep', 'shrew', 'skunk', 'snail', 'snake', 'sparrow', 'spider', 'spoonbill', 'squid', 'squirrel', 'starling', 'stingray', 'stinkbug', 'stork', 'swallow', 'swan', 'tapir', 'tarsier', 'termite', 'tiger', 'toad', 'trout', 'turkey', 'turtle', 'vicuña', 'viper', 'vulture', 'wallaby', 'walrus', 'wasp', 'water-buffalo', 'weasel', 'whale', 'wolf', 'wolverine', 'wombat', 'woodcock', 'woodpecker', 'worm', 'wren', 'yak', 'zebra']
 
+  return animals[Math.floor(Math.random()*animals.length)]
+}
 
-
+//This creates the unique user ID
 function getRandomToken() {
     // E.g. 8 * 32 = 256 bits token
     var randomPool = new Uint8Array(32);
@@ -23,6 +34,22 @@ function getRandomToken() {
     console.log("THIS USER'S TOKEN IS: ", hex);
     return hex;
 }
+
+//Stores unique ID locally in Browser Cache
+function generateID(){
+  let generateID = null;
+  if (localStorage.getItem("userid") === null){
+      userid = getRandomToken();
+      userid = `${returnRandomAnimalName()}-${userid}`;
+      localStorage.setItem("userid", userid);
+  }
+  else{
+    userid = localStorage.getItem("userid");
+  }
+  console.log("userid is: ", userid);
+  return userid;
+}
+
 
 
 function getHistory(id){
@@ -45,25 +72,29 @@ function getHistory(id){
             //console.log(result);
             list = parseHistory(result);
             if(stopRecording){
-              if (localStorage.getItem("latestResults") === null){
-                const errorNoData = `<div class="partisan-results"><div class="partisan-text partisan-error-text">Unfortunately, we have insufficient data! Ensure data collection is enabled in Settings, and keep on browsing!</div></div>`
-                $('#insertHere').append(errorNoData);
-              }
-              else{
-                responseText = localStorage.getItem("latestResults");
-                console.log("WE GOT A RESPONSE:", responseText);
-                publishResults(responseText);
-                $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
-              }
+              retrieveLastResults();
             }
             else{
               sendURL(list, id);
             }
-
     });
-
-
 }
+
+//This is so the user can see their most recent recorded results, if they
+//don't want to share their current data.
+function retrieveLastResults(){
+  if (localStorage.getItem("latestResults") === null || (localStorage.getItem("latestResults") === "Sorry, your browsing history has insufficient data. Keep on browsing!")){
+    //const errorNoData = `<div class="partisan-results"><div class="partisan-text partisan-error-text">Unfortunately, we have insufficient data! Ensure data collection is enabled in Settings, and keep on browsing!</div></div>`
+    $('#insertHere').append(errorNoData);
+  }
+  else{
+    responseText = localStorage.getItem("latestResults");
+    console.log("WE GOT A RESPONSE:", responseText);
+    publishResults(responseText);
+    $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
+  }
+}
+
 
 function parseHistory(result){
     var output_obj = {};
@@ -84,7 +115,6 @@ function parseHistory(result){
         output_obj.urls.push(out_str);
     }
     output_obj.ID = id;
-    //console.log("ID is: ", output_obj.ID);
     var out = JSON.stringify(output_obj);
     //this line below generates all browsing history
     //document.body.appendChild(document.createTextNode(out));
@@ -124,113 +154,36 @@ function sendURL(jsonfile, id){
     console.log("Sending");
     //we need to catch any internal server errors here
     //refactor as fetch API
-    console.log("ID is: ", id);
+    console.log(jsonfile);
     request.send(jsonfile);
-
     function XHRErrorHandler(event){
         console.log("Error");
     }
 
     request.onload = function(){
-
-        //this.responseText = parseFloat(this.responseText).toFixed(2);
         console.log("WE GOT A RESPONSE:", this.responseText);
         let temp = parseFloat(this.responseText).toFixed(2);
         localStorage.setItem("latestResults", this.responseText);
         // We need to accomodate for JSON, we now have score and top 3!
-        console.log(typeof(this.responseText));
-        console.log(temp.length);
-        publishResults(this.responseText);
-
-        $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
-    }
 
 
+        if( (this.responseText === null) || (this.responseText === "Sorry, your browsing history has insufficient data. Keep on browsing!")){
 
-}
-
-
-function generateID(){
-  let generateID = null;
-  if (localStorage.getItem("userid") === null){
-      userid = getRandomToken();
-      userid = `${returnRandomAnimalName()}-${userid}`;
-      localStorage.setItem("userid", userid);
-  }
-  else{
-    userid = localStorage.getItem("userid");
-  }
-
-  console.log("userid is: ", userid);
-  return userid;
-}
-
-
-var id = null;
-
-document.addEventListener('DOMContentLoaded', function () {
-
-  console.log("starting it");
-  id = generateID();
-
-
-  console.log("id right after starting is ", id);
-  if( typeof id === 'undefined' || id === null ){
-      id = generateID();
-      console.log("ID as opposed to email is ", id);
-  }
-
-});
-//We attach our custom listeners here
-
-//Things to execute upon the document fully loading
-$(document).ready(function () {
-    //Generates our previous settings
-    if(localStorage.getItem("stopRecording") == "true"){
-      console.log("retrieving toggle settings");
-      stopRecording = true;
-      retrieveToggleSettings();
-    }
-
-    /*
-    This section below acts as a listener for whenever the stopRecording
-    toggle is flicked. */
-    $(function(){
-      $('#checkbox-stoprecording').change(function() {
-        if (stopRecording == false){
-          stopRecording = true;
+          $('#insertHere').append(errorNoData);
         }
         else{
-          stopRecording = false;
+          const response = JSON.parse(this.responseText);
+          publishResults(response);
         }
-        console.log("updating setting to :", stopRecording);
-        localStorage.setItem("stopRecording", stopRecording);
-
-      })
-    })
-
-    /*
-    This section below generates the opt-out link with unique user ID */
-    $('#optOutLink').replaceWith(`<a title="Contact us at jbf@student.unimelb.edu.au to opt out" target="_top" href=mailto:jbf@student.unimelb.edu.au?subject=User%20Opt%20Out%20Request&body=${id}%20requesting%20to%20withdraw%20from%20survey>Opt out of the survey</a>`)
-
-
-    $(document).on('click', '#generateHistoryButton', function(){
-      getHistory(id);
-    });
-  });
-
-
-
-
+        $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
+    }
+}
 //The following code deals with dynamic webpage generation
 
-function publishResults(response){
-    //document.body.appendChild(document.createTextNode("This is your result"));
-    //document.body.appendChild(document.createTextNode(response));
-
-    //d3.select('body').append('h2').text("This is your result");
-    //d3.select('body').append('p').text(response);
-    const jsonResponse = JSON.parse(response);
+function publishResults(jsonResponse){
+    //console.log(response);
+    //TODO: Catch an internal server error response here
+    //const jsonResponse = JSON.parse(response);
     console.log(jsonResponse);
     console.log(jsonResponse["topthree"]);
     console.log(jsonResponse["topthreeveracity"]);
@@ -248,9 +201,6 @@ function publishResults(response){
     for (i = 0; i < 3; i++) {
         topThree = topThree + "<a href='#' data-toggle='tooltip' title='Content Reliability: " + content_veracity[i] + "' >" + jsonResponse['topthree'][i] + "</a><br>"
     }
-    console.log(topThree);
-    //const topThree = `<a href="#" data-toggle='tooltip' title='Content Reliability: ${content_veracity[0]}'> ${jsonResponse['topthree'][0]}</a><br>`
-
 
     const carouselInfoButton = '<button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" display=none data-target="#partisanScoreInfoModal">Info</button>'
 
@@ -294,18 +244,12 @@ function publishResults(response){
 
     $('#fillerDiv').remove();
     if($('#PartisanCarouselResults').length){
-        //$('#PartisanScoreTitle').replaceWith("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>");
-        //$('#PartisanScoreValue').replaceWith("<div id='PartisanScoreValue' class='row partisan-text partisan-results rounded mt-2 justify-content-center animated fadeIn'>"+jsonResponse.score+"</row>");
         $('#PartisanCarouselResults').replaceWith(carouselCode);
-
-
     }
     else{
-        //$('#insertHere').append("<div id='PartisanScoreTitle' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score</h3></row></div>");
         $('#insertHere').append(carouselCode);
     }
 
-    console.log("userid is now: ", userid)
     let partisanNavMTurk = ""
     if(stopRecording){
       partisanNavMTurk = `<div class="column" id="PartisanNavMTurk"> Data Collection Disabled for 24 Hours </div>`
@@ -314,17 +258,13 @@ function publishResults(response){
       partisanNavMTurk = `<div class="column" id="PartisanNavMTurk"> MTurk ID: ${userid} </div>`
     }
     $('#PartisanNavMTurk').replaceWith(partisanNavMTurk);
-
-
-
-
     generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
 }
 
 function partisanScoreToAlignment(partisanValue){
-  console.log(partisanValue);
   var whole = Math.round(partisanValue);
   console.log(whole);
+  console.log(partisanValue);
 
   var dict = {
     3: "Far Right",
@@ -336,10 +276,10 @@ function partisanScoreToAlignment(partisanValue){
     3: "Far Left"
   };
 
-  if(whole > 3){
+  if(whole >= 3){
     return "Far Right";
   }
-  else if (whole < -3){
+  else if (whole <= -3){
     return "Far Left";
   }
   else{
@@ -347,6 +287,8 @@ function partisanScoreToAlignment(partisanValue){
   }
 }
 
+//Conducts the generation of of the graph visualisation
+//TODO: Alignment seems to be slightly skewed on X axis
 function generatePartisanScaleResult(partisanvalue){
   var width = 400,
       height = 100;
@@ -379,9 +321,6 @@ function generatePartisanScaleResult(partisanvalue){
         .attr("height", 30)
         .attr("width", 2)
 
-
-
-
   // Add scales to axis
   var x_axis = d3.axisBottom()
                  .scale(scale)
@@ -400,23 +339,41 @@ function generatePartisanScaleResult(partisanvalue){
   d3.select("g").style('transform', 'translate(10%,10%)')
 }
 
+//Things to execute upon the document fully loading
+$(document).ready(function () {
+
+    id = generateID();
+
+    //Generates our previous settings
+    if(localStorage.getItem("stopRecording") == "true"){
+      console.log("retrieving toggle settings");
+      stopRecording = true;
+      retrieveToggleSettings();
+    }
+
+    /*
+    This section below acts as a listener for whenever the stopRecording
+    toggle is flicked. */
+    $(function(){
+      $('#checkbox-stoprecording').change(function() {
+        if (stopRecording == false){
+          stopRecording = true;
+        }
+        else{
+          stopRecording = false;
+        }
+        console.log("updating setting to :", stopRecording);
+        localStorage.setItem("stopRecording", stopRecording);
+
+      });
+    });
+
+    /*
+    This section below generates the opt-out link with unique user ID */
+    $('#optOutLink').replaceWith(`<a title="Contact us at jbf@student.unimelb.edu.au to opt out" target="_top" href=mailto:jbf@student.unimelb.edu.au?subject=User%20Opt%20Out%20Request&body=${id}%20requesting%20to%20withdraw%20from%20survey>Opt out of the survey</a>`)
 
 
-function generateHomeScreen(){
-    d3.select('body').append('h1').text("Partisan Calculator");
-
-    d3.select('body').append('input');
-
-
-}
-
-function returnRandomAnimalName(){
-  //https://github.com/boennemann/animals
-  animals = ['aardvark', 'albatross', 'alligator', 'alpaca', 'ant', 'anteater', 'antelope', 'ape', 'armadillo', 'baboon', 'badger', 'barracuda', 'bat', 'bear', 'beaver', 'bee', 'bison', 'boar', 'buffalo', 'butterfly', 'camel', 'capybara', 'caribou', 'cassowary', 'cat', 'caterpillar', 'cattle', 'chamois', 'cheetah', 'chicken', 'chimpanzee', 'chinchilla', 'chough', 'clam', 'cobra', 'cockroach', 'cod', 'cormorant', 'coyote', 'crab', 'crane', 'crocodile', 'crow', 'curlew', 'deer', 'dinosaur', 'dog', 'dogfish', 'dolphin', 'donkey', 'dotterel', 'dove', 'dragonfly', 'duck', 'dugong', 'dunlin', 'eagle', 'echidna', 'eel', 'eland', 'elephant', 'elephant-seal', 'elk', 'emu', 'falcon', 'ferret', 'finch', 'fish', 'flamingo', 'fly', 'fox', 'frog', 'gaur', 'gazelle', 'gerbil', 'giant-panda', 'giraffe', 'gnat', 'gnu', 'goat', 'goose', 'goldfinch', 'goldfish', 'gorilla', 'goshawk', 'grasshopper', 'grouse', 'guanaco', 'guinea-fowl', 'guinea-pig', 'gull', 'hamster', 'hare', 'hawk', 'hedgehog', 'heron', 'herring', 'hippopotamus', 'hornet', 'horse', 'human', 'hummingbird', 'hyena', 'ibex', 'ibis', 'jackal', 'jaguar', 'jay', 'jellyfish', 'kangaroo', 'kingfisher', 'koala', 'komodo-dragon', 'kookabura', 'kouprey', 'kudu', 'lapwing', 'lark', 'lemur', 'leopard', 'lion', 'llama', 'lobster', 'locust', 'loris', 'louse', 'lyrebird', 'magpie', 'mallard', 'manatee', 'mandrill', 'mantis', 'marten', 'meerkat', 'mink', 'mole', 'mongoose', 'monkey', 'moose', 'mouse', 'mosquito', 'mule', 'narwhal', 'newt', 'nightingale', 'octopus', 'okapi', 'opossum', 'oryx', 'ostrich', 'otter', 'owl', 'ox', 'oyster', 'panther', 'parrot', 'partridge', 'peafowl', 'pelican', 'penguin', 'pheasant', 'pig', 'pigeon', 'polar-bear', 'pony', 'porcupine', 'porpoise', 'prairie-dog', 'quail', 'quelea', 'quetzal', 'rabbit', 'raccoon', 'rail', 'ram', 'rat', 'raven', 'red-deer', 'red-panda', 'reindeer', 'rhinoceros', 'rook', 'salamander', 'salmon', 'sand-dollar', 'sandpiper', 'sardine', 'scorpion', 'sea-lion', 'sea-urchin', 'seahorse', 'seal', 'shark', 'sheep', 'shrew', 'skunk', 'snail', 'snake', 'sparrow', 'spider', 'spoonbill', 'squid', 'squirrel', 'starling', 'stingray', 'stinkbug', 'stork', 'swallow', 'swan', 'tapir', 'tarsier', 'termite', 'tiger', 'toad', 'trout', 'turkey', 'turtle', 'vicuña', 'viper', 'vulture', 'wallaby', 'walrus', 'wasp', 'water-buffalo', 'weasel', 'whale', 'wolf', 'wolverine', 'wombat', 'woodcock', 'woodpecker', 'worm', 'wren', 'yak', 'zebra']
-
-  return animals[Math.floor(Math.random()*animals.length)]
-}
-
-function retrieveToggleSettings(){
-  $('#checkbox-stoprecording').replaceWith(`<input id="checkbox-stoprecording" type="checkbox" checked data-toggle="toggle" data-size="sm" >`)
-}
+    $(document).on('click', '#generateHistoryButton', function(){
+      getHistory(id);
+    });
+  });

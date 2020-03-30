@@ -63,7 +63,7 @@ class PartisanModel:
         score = (scores.sum() - zeroes) if scores.sum() > 0 else (scores.sum() + zeroes)
         print("your actual score is: ", score)
 
-        return score / len(history)
+        return (score / (len(history)*2))
 
     def z_score_classifier(self, history, state):
         #State needs to be obtained from
