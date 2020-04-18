@@ -90,7 +90,7 @@ class PartisanModel:
         self.history = self.generate_user_media_history(self.df, self.counts)
         print("History: ", self.history)
         #We need to pull the plug here, upon failure.
-        if self.history.empty:
+        if self.history.empty or self.history.size < 5:
             print("Sorry, your browsing history has insufficient data. Keep on browsing!")
             self.score = None
         else:

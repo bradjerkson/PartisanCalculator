@@ -263,8 +263,6 @@ function publishResults(jsonResponse){
 
 function partisanScoreToAlignment(partisanValue){
   var whole = Math.round(partisanValue);
-  console.log(whole);
-  console.log(partisanValue);
 
   var dict = {
     3: "Far Right",
@@ -293,7 +291,7 @@ function generatePartisanScaleResult(partisanvalue){
   var width = 400,
       height = 100;
 
-  var data = [-3, -2, -1, 0, 1, 2, 3];
+  var data = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
 
 
   // Append SVG
@@ -308,7 +306,7 @@ function generatePartisanScaleResult(partisanvalue){
 
   // Create scale
   var scale = d3.scaleLinear()
-                .domain([-3,3])
+                .domain([-5,5])
                 .range([0, width-100]);
 
   console.log("creating partisan scale");
