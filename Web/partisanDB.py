@@ -52,10 +52,11 @@ class PartisanDB:
             dates = self.date_extract(user_history)
             filtered_dates = self.date_filter(dates)
             filtered_history = self.history_filter(dates, user_history)
+            return filtered_history
 
 
-#returns an array of dates from earliest to most recent.
-#Alongside a corresponding array position for userDict
+    #returns an array of dates from earliest to most recent.
+    #Alongside a corresponding array position for userDict
     def date_extract(self, user_history):
         date_array = []
         for i in range(0,len(user_history)):
@@ -87,6 +88,8 @@ class PartisanDB:
             filtered_history.append(relevant_hist)
 
         return filtered_history
+
+
 
 """
 TODO: Generates history of all users
@@ -129,12 +132,8 @@ for item in dates:
 
 filtered_history = []
 for entry in dates:
-  hist = user_history[entry[1]]
-  relevant_hist = '{ date: ' + str(hist['date']) + ', score: ' + str(hist['score']) +', top three: ' + str(hist['top three']) + ', top three veracity: ' + str(hist['top three veracity'] + "}"
-  print(relevant_hist)
-  #filtered_history.extend(relevant_hist)
-
-
-
-
+    hist = user_history[entry[1]]
+    relevant_hist = '{ date: ' + str(hist['date']) + ', score: ' + str(hist['score']) +', top three: ' + str(hist['top three']) + ', top three veracity: ' + str(hist['top three veracity']) + '}'
+    print(relevant_hist)
+    filtered_history.append(relevant_hist)
 """
