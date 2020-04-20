@@ -40,12 +40,12 @@ class PartisanDB:
            for k,v in id.items():
                if k=='userid' and v==input_id:
                    userDict[v].append(id)
-        return userDict[v]
+        return userDict[input_id]
 
     def filter_history_user(self, input_id):
-        user_history = generate_history_user(input_id)
+        user_history = self.generate_history_user(input_id)
         if len(user_history) < 5:
-            return "Insufficient Length"
+            return '"Insufficient Length"'
         else:
             #Here we need to verify that the gap between each item is at least three days
             #it's the 3rd array item which corresponds to date
@@ -60,14 +60,13 @@ class PartisanDB:
     def date_extract(self, user_history):
         date_array = []
         for i in range(0,len(user_history)):
-            curr_date = user_history[i].items()[3][1].split(" ")
+            curr_date = list(user_history[i].items())[3][1].split(" ")
             curr_time = curr_date[3].split(':')
             curr_date_new = datetime(int(curr_date[2]), int(curr_date[1]), int(curr_date[0]), int(curr_time[0]), int(curr_time[1]))
-            date_array.append((curr_date,i))
+            date_array.append((curr_date_new,i))
         return sorted(date_array)
 
     def date_filter(self, dates):
-        dates = date_array
         for item in dates:
             for item2 in dates:
                 if(item[0] == item2[0]):
@@ -84,7 +83,7 @@ class PartisanDB:
         for entry in dates:
 
             hist = user_history[entry[1]]
-            relevant_hist = '{ date: ' + str(hist['date']) + ', score: ' + str(hist['score']) +', top three: ' + str(hist['top three']) + ', top three veracity: ' + str(hist['top three veracity'] + "}")
+            relevant_hist = '{ "date": ' + str(hist['date']) + ', "score": ' + str(hist['score']) +', "topthree": ' + str(hist['top three']) + ', "topthreeveracity": ' + str(hist['top three veracity']) + "}"
             filtered_history.append(relevant_hist)
 
         return filtered_history

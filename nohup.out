@@ -1,0 +1,113 @@
+[uWSGI] getting INI configuration from rest_api.ini
+*** Starting uWSGI 2.0.18 (64bit) on [Mon Apr 20 05:41:49 2020] ***
+compiled with version: 7.4.0 on 18 September 2019 05:18:17
+os: Linux-4.15.0-48-generic #51-Ubuntu SMP Wed Apr 3 08:28:49 UTC 2019
+nodename: partisan01
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/PartisanCalculator/Web
+detected binary path: /home/ubuntu/.local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+your processes number limit is 31820
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address /tmp/rest_api.sock fd 3
+Python version: 3.6.8 (default, Aug 20 2019, 17:12:48)  [GCC 8.3.0]
+*** Python threads support is disabled. You can enable it with --enable-threads ***
+Python main interpreter initialized at 0x5560527159f0
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 437424 bytes (427 KB) for 5 cores
+*** Operational MODE: preforking ***
+unable to load configuration from from multiprocessing.semaphore_tracker import main;main(14)
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x5560527159f0 pid: 27141 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 27141)
+spawned uWSGI worker 1 (pid: 27145, cores: 1)
+spawned uWSGI worker 2 (pid: 27146, cores: 1)
+spawned uWSGI worker 3 (pid: 27147, cores: 1)
+spawned uWSGI worker 4 (pid: 27148, cores: 1)
+spawned uWSGI worker 5 (pid: 27149, cores: 1)
+subprocess 27144 exited with code 1
+starting
+eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf
+History:                        index   0  ...   fact          bias
+0            healthline.com  22  ...   HIGH        center
+1               news.com.au   7  ...   HIGH   left-center
+2           dailymail.co.uk   6  ...  MIXED         right
+3                  vice.com   6  ...  MIXED   left-center
+4                 webmd.com   5  ...   HIGH        center
+5      theaustralian.com.au   4  ...   HIGH  right-center
+6     dailytelegraph.com.au   4  ...  MIXED         right
+7          thehardtimes.net   3  ...    LOW        center
+8              9news.com.au   3  ...   HIGH  right-center
+9                   vox.com   3  ...   HIGH          left
+10       couriermail.com.au   2  ...   HIGH  right-center
+11  thesaturdaypaper.com.au   2  ...   HIGH   left-center
+12      betootaadvocate.com   2  ...    LOW        center
+13          theatlantic.com   2  ...   HIGH   left-center
+14             theverge.com   2  ...   HIGH   left-center
+15       adelaidenow.com.au   2  ...  MIXED         right
+16             news.sky.com   2  ...   HIGH   left-center
+17         japantimes.co.jp   2  ...   HIGH        center
+18             buzzfeed.com   2  ...  MIXED   left-center
+19             politico.com   1  ...   HIGH   left-center
+20   commentarymagazine.com   1  ...   HIGH         right
+21              metro.co.uk   1  ...   HIGH   left-center
+22        medicalxpress.com   1  ...   HIGH        center
+23              esquire.com   1  ...   HIGH          left
+24              courant.com   1  ...   HIGH   left-center
+25              ibtimes.com   1  ...  MIXED   left-center
+26                mises.org   1  ...  MIXED  right-center
+27        thedailybeast.com   1  ...   HIGH          left
+28      businessinsider.com   1  ...   HIGH   left-center
+29                 pnas.org   1  ...   HIGH        center
+30               change.org   1  ...   HIGH          left
+31        indianexpress.com   1  ...   HIGH        center
+32           elitedaily.com   1  ...  MIXED          left
+33           techcrunch.com   1  ...   HIGH   left-center
+34              thewrap.com   1  ...  MIXED        center
+35         news.abs-cbn.com   1  ...   HIGH        center
+36       chicagotribune.com   1  ...   HIGH   left-center
+37         villagevoice.com   1  ...   HIGH          left
+38             mirror.co.uk   1  ...  MIXED          left
+39              foxnews.com   1  ...  MIXED         right
+
+[40 rows x 7 columns]
+your actual score is:  0
+['HIGH', 'HIGH', 'MIXED']
+0.0
+odict_items([('_id', '0b3b9af136ef48eeae19a4d03874779b'), ('_rev', '1-0694efec74f66f0d808f79d4b2907038'), ('userid', 'eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf'), ('date', '19 04 2020 06:57:29'), ('hist', '{"0":{"index":"healthline.com","0":22,"source_url":"https:\\/\\/www.healthline.com\\/","source_url_processed":"healthline.com","URL":"https:\\/\\/mediabiasfactcheck.com\\/healthline\\/","fact":"HIGH","bias":"center"},"1":{"index":"news.com.au","0":7,"source_url":"http:\\/\\/www.news.com.au\\/","source_url_processed":"news.com.au","URL":"http:\\/\\/mediabiasfactcheck.com\\/news-com-au\\/","fact":"HIGH","bias":"left-center"},"2":{"index":"dailymail.co.uk","0":6,"source_url":"http:\\/\\/www.dailymail.co.uk\\/ushome\\/index.html","source_url_processed":"dailymail.co.uk","URL":"http:\\/\\/mediabiasfactcheck.com\\/daily-mail\\/","fact":"MIXED","bias":"right"},"3":{"index":"vice.com","0":6,"source_url":"https:\\/\\/www.vice.com\\/","source_url_processed":"vice.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/vice-news\\/","fact":"MIXED","bias":"left-center"},"4":{"index":"webmd.com","0":5,"source_url":"http:\\/\\/www.webmd.com\\/","source_url_processed":"webmd.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/webmd\\/","fact":"HIGH","bias":"center"},"5":{"index":"dailytelegraph.com.au","0":4,"source_url":"http:\\/\\/www.dailytelegraph.com.au\\/","source_url_processed":"dailytelegraph.com.au","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-daily-telegraph-australia\\/","fact":"MIXED","bias":"right"},"6":{"index":"theaustralian.com.au","0":4,"source_url":"http:\\/\\/www.theaustralian.com.au\\/","source_url_processed":"theaustralian.com.au","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-australian\\/","fact":"HIGH","bias":"right-center"},"7":{"index":"thehardtimes.net","0":3,"source_url":"http:\\/\\/thehardtimes.net\\/","source_url_processed":"thehardtimes.net","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-hard-times\\/","fact":"LOW","bias":"center"},"8":{"index":"9news.com.au","0":3,"source_url":"http:\\/\\/www.9news.com.au\\/","source_url_processed":"9news.com.au","URL":"http:\\/\\/mediabiasfactcheck.com\\/9-news-australia\\/","fact":"HIGH","bias":"right-center"},"9":{"index":"vox.com","0":3,"source_url":"http:\\/\\/www.vox.com\\/","source_url_processed":"vox.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/vox\\/","fact":"HIGH","bias":"left"},"10":{"index":"thesaturdaypaper.com.au","0":2,"source_url":"https:\\/\\/www.thesaturdaypaper.com.au\\/","source_url_processed":"thesaturdaypaper.com.au","URL":"https:\\/\\/mediabiasfactcheck.com\\/the-saturday-paper\\/","fact":"HIGH","bias":"left-center"},"11":{"index":"theverge.com","0":2,"source_url":"http:\\/\\/www.theverge.com\\/","source_url_processed":"theverge.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-verge\\/","fact":"HIGH","bias":"left-center"},"12":{"index":"news.sky.com","0":2,"source_url":"http:\\/\\/news.sky.com\\/","source_url_processed":"news.sky.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/sky-news\\/","fact":"HIGH","bias":"left-center"},"13":{"index":"betootaadvocate.com","0":2,"source_url":"http:\\/\\/www.betootaadvocate.com","source_url_processed":"betootaadvocate.com","URL":"https:\\/\\/mediabiasfactcheck.com\\/the-betoota-advocate\\/","fact":"LOW","bias":"center"},"14":{"index":"adelaidenow.com.au","0":2,"source_url":"http:\\/\\/www.adelaidenow.com.au\\/","source_url_processed":"adelaidenow.com.au","URL":"https:\\/\\/mediabiasfactcheck.com\\/the-advertiser\\/","fact":"MIXED","bias":"right"},"15":{"index":"couriermail.com.au","0":2,"source_url":"http:\\/\\/www.couriermail.com.au\\/","source_url_processed":"couriermail.com.au","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-courier-mail\\/","fact":"HIGH","bias":"right-center"},"16":{"index":"japantimes.co.jp","0":2,"source_url":"https:\\/\\/www.japantimes.co.jp\\/","source_url_processed":"japantimes.co.jp","URL":"https:\\/\\/mediabiasfactcheck.com\\/japan-times\\/","fact":"HIGH","bias":"center"},"17":{"index":"buzzfeed.com","0":2,"source_url":"https:\\/\\/www.buzzfeed.com\\/","source_url_processed":"buzzfeed.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/buzzfeed\\/","fact":"MIXED","bias":"left-center"},"18":{"index":"theatlantic.com","0":2,"source_url":"https:\\/\\/www.theatlantic.com\\/","source_url_processed":"theatlantic.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-atlantic\\/","fact":"HIGH","bias":"left-center"},"19":{"index":"esquire.com","0":1,"source_url":"http:\\/\\/www.esquire.com\\/","source_url_processed":"esquire.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/esquire-magazine\\/","fact":"HIGH","bias":"left"},"20":{"index":"medicalxpress.com","0":1,"source_url":"http:\\/\\/medicalxpress.com\\/","source_url_processed":"medicalxpress.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/medicalxpress\\/","fact":"HIGH","bias":"center"},"21":{"index":"metro.co.uk","0":1,"source_url":"http:\\/\\/metro.co.uk\\/","source_url_processed":"metro.co.uk","URL":"http:\\/\\/mediabiasfactcheck.com\\/metro-uk\\/","fact":"HIGH","bias":"left-center"},"22":{"index":"courant.com","0":1,"source_url":"http:\\/\\/www.courant.com\\/","source_url_processed":"courant.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-hartford-courant\\/","fact":"HIGH","bias":"left-center"},"23":{"index":"ibtimes.com","0":1,"source_url":"http:\\/\\/www.ibtimes.com\\/","source_url_processed":"ibtimes.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/international-business-times\\/","fact":"MIXED","bias":"left-center"},"24":{"index":"mises.org","0":1,"source_url":"https:\\/\\/mises.org\\/","source_url_processed":"mises.org","URL":"http:\\/\\/mediabiasfactcheck.com\\/mises-daily\\/","fact":"MIXED","bias":"right-center"},"25":{"index":"businessinsider.com","0":1,"source_url":"http:\\/\\/www.businessinsider.com\\/","source_url_processed":"businessinsider.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/business-insider\\/","fact":"HIGH","bias":"left-center"},"26":{"index":"politico.com","0":1,"source_url":"http:\\/\\/www.politico.com\\/","source_url_processed":"politico.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/politico\\/","fact":"HIGH","bias":"left-center"},"27":{"index":"commentarymagazine.com","0":1,"source_url":"https:\\/\\/www.commentarymagazine.com\\/","source_url_processed":"commentarymagazine.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/commentary-magazine\\/","fact":"HIGH","bias":"right"},"28":{"index":"pnas.org","0":1,"source_url":"http:\\/\\/www.pnas.org\\/","source_url_processed":"pnas.org","URL":"http:\\/\\/mediabiasfactcheck.com\\/proceedings-of-the-national-academy-of-sciences-of-the-united-states-of-america-pnas\\/","fact":"HIGH","bias":"center"},"29":{"index":"thedailybeast.com","0":1,"source_url":"http:\\/\\/www.thedailybeast.com\\/","source_url_processed":"thedailybeast.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/daily-beast\\/","fact":"HIGH","bias":"left"},"30":{"index":"indianexpress.com","0":1,"source_url":"http:\\/\\/indianexpress.com\\/","source_url_processed":"indianexpress.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-indian-express\\/","fact":"HIGH","bias":"center"},"31":{"index":"villagevoice.com","0":1,"source_url":"http:\\/\\/www.villagevoice.com\\/","source_url_processed":"villagevoice.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/the-village-voice\\/","fact":"HIGH","bias":"left"},"32":{"index":"thewrap.com","0":1,"source_url":"https:\\/\\/www.thewrap.com","source_url_processed":"thewrap.com","URL":"https:\\/\\/mediabiasfactcheck.com\\/thewrap\\/","fact":"MIXED","bias":"center"},"33":{"index":"elitedaily.com","0":1,"source_url":"http:\\/\\/elitedaily.com\\/","source_url_processed":"elitedaily.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/elite-daily\\/","fact":"MIXED","bias":"left"},"34":{"index":"techcrunch.com","0":1,"source_url":"https:\\/\\/techcrunch.com","source_url_processed":"techcrunch.com","URL":"https:\\/\\/mediabiasfactcheck.com\\/techcrunch\\/","fact":"HIGH","bias":"left-center"},"35":{"index":"change.org","0":1,"source_url":"https:\\/\\/www.change.org\\/","source_url_processed":"change.org","URL":"http:\\/\\/mediabiasfactcheck.com\\/change-org\\/","fact":"HIGH","bias":"left"},"36":{"index":"news.abs-cbn.com","0":1,"source_url":"http:\\/\\/news.abs-cbn.com\\/","source_url_processed":"news.abs-cbn.com","URL":"https:\\/\\/mediabiasfactcheck.com\\/abs-cbn-news\\/","fact":"HIGH","bias":"center"},"37":{"index":"chicagotribune.com","0":1,"source_url":"http:\\/\\/www.chicagotribune.com\\/","source_url_processed":"chicagotribune.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/chicago-tribune\\/","fact":"HIGH","bias":"left-center"},"38":{"index":"foxnews.com","0":1,"source_url":"http:\\/\\/www.foxnews.com\\/","source_url_processed":"foxnews.com","URL":"http:\\/\\/mediabiasfactcheck.com\\/fox-news\\/","fact":"MIXED","bias":"right"},"39":{"index":"mirror.co.uk","0":1,"source_url":"http:\\/\\/www.mirror.co.uk\\/","source_url_processed":"mirror.co.uk","URL":"http:\\/\\/mediabiasfactcheck.com\\/daily-mirror\\/","fact":"MIXED","bias":"left"}}'), ('score', 0.0), ('top three', ['healthline.com', 'news.com.au', 'dailymail.co.uk']), ('top three veracity', ['HIGH', 'HIGH', 'MIXED'])])
+[2020-04-20 05:41:59,279] ERROR in app: Exception on /receive [POST]
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.6/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ubuntu/.local/lib/python3.6/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ubuntu/.local/lib/python3.6/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ubuntu/.local/lib/python3.6/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ubuntu/.local/lib/python3.6/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ubuntu/.local/lib/python3.6/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "./rest_api.py", line 36, in receive
+    filtered_history = db.filter_history_user(req_data['ID'])
+  File "./partisanDB.py", line 53, in filter_history_user
+    dates = self.date_extract(user_history)
+  File "./partisanDB.py", line 65, in date_extract
+    curr_date = user_history[i].items()[3][1].split(" ")
+TypeError: 'odict_items' object does not support indexing
+[pid: 27147|app: 0|req: 1/1] 27.32.191.69 () {44 vars in 765 bytes} [Mon Apr 20 05:41:58 2020] POST /receive => generated 290 bytes in 393 msecs (HTTP/1.1 500) 2 headers in 84 bytes (91 switches on core 0)
+SIGINT/SIGQUIT received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+worker 5 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: unix socket /tmp/rest_api.sock removed.
