@@ -36,7 +36,11 @@ def receive():
             #filtered_history = db.filter_history_user(req_data['ID'])
             filtered_history = db.filter_history_user("eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf")
             print(filtered_history)
-            returnVal = "{"+ "\"score\""+":" + str(model.score) + ",\"topthree\":"  + str(model.top_three) + ",\"topthreeveracity\":" + str(model.top_three_veracity) + ",\"history\":" + str(filtered_history)+ "}"
+            returnVal = "{"+ "\"score\""+":" + str(model.score) + ",\"topthree\":"  + str(model.top_three) + ",\"topthreeveracity\":" + str(model.top_three_veracity)
+            returnVal = returnVal + ",\"history\":["
+            for entry in filtered_history:
+                returnVal = returnVal + entry
+             returnVal = returnVal + "]}"
             return returnVal.replace("'", "\"")
         else:
             return "Sorry, your browsing history has insufficient data. Keep on browsing!"
