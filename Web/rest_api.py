@@ -40,7 +40,7 @@ def receive():
             returnVal = returnVal + ",\"history\":["
             for entry in filtered_history:
                 returnVal = returnVal + entry
-             returnVal = returnVal + "]}"
+            returnVal = returnVal + "]}"
             return returnVal.replace("'", "\"")
         else:
             return "Sorry, your browsing history has insufficient data. Keep on browsing!"

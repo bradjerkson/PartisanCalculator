@@ -83,7 +83,7 @@ class PartisanDB:
         for entry in dates:
 
             hist = user_history[entry[1]]
-            relevant_hist = "{" + "\"date\"" + ":" + str(hist['date']) + ",\"score\":" + str(hist['score']) + ",\"topthree\":" + str(hist['top three']) + ",\"topthreeveracity\":" + str(hist['top three veracity']) + "}"
+            relevant_hist = "{" + "\"date\"" + ":\"" + str(hist['date']) + "\",\"score\":" + str(hist['score']) + ",\"topthree\":" + str(hist['top three']) + ",\"topthreeveracity\":" + str(hist['top three veracity']) + "}"
             relevant_hist = relevant_hist.replace("'", "\"")
             filtered_history.append(relevant_hist)
 
