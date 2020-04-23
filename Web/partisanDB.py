@@ -50,7 +50,9 @@ class PartisanDB:
             #Here we need to verify that the gap between each item is at least three days
             #it's the 3rd array item which corresponds to date
             dates = self.date_extract(user_history)
+            dates.sort()
             filtered_dates = self.date_filter(dates)
+            filtered_dates = self.date_filter(filtered_dates)
             filtered_history = self.history_filter(dates, user_history)
             return filtered_history
 
@@ -120,15 +122,22 @@ for i in range(0,len(user_history)):
     date_array.append((curr_date_new,i))
 
 dates = date_array
+
+dates.sort()
+new_arr = []
 for item in dates:
     for item2 in dates:
         if(item[0] == item2[0]):
             pass
         elif abs((item[0] - item2[0]).days) < 3:
+            #This part works up to Here
             try:
-                dates.remove(item2[0])
+                dates.remove(item2)
+                #new_arr.append(item[0])
             except:
                 pass
+
+
 
 filtered_history = []
 for entry in dates:

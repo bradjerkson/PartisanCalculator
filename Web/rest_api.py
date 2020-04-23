@@ -39,7 +39,8 @@ def receive():
             returnVal = "{"+ "\"score\""+":" + str(model.score) + ",\"topthree\":"  + str(model.top_three) + ",\"topthreeveracity\":" + str(model.top_three_veracity)
             returnVal = returnVal + ",\"history\":["
             for entry in filtered_history:
-                returnVal = returnVal + entry
+                returnVal = returnVal + entry + ","
+            returnVal = returnVal.rstrip(",")
             returnVal = returnVal + "]}"
             return returnVal.replace("'", "\"")
         else:

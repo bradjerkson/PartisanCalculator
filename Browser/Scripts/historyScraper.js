@@ -187,6 +187,7 @@ function publishResults(jsonResponse){
     console.log(jsonResponse);
     console.log(jsonResponse["topthree"]);
     console.log(jsonResponse["topthreeveracity"]);
+    //console.log(jsonResponse["history"]);
 
     //Enable tooltips
     $(function () {
@@ -195,6 +196,7 @@ function publishResults(jsonResponse){
 
     var alignment = partisanScoreToAlignment(jsonResponse["score"]);
     var content_veracity = jsonResponse["topthreeveracity"];
+    var historyList = parseHistoryJSON(jsonResponse["history"]);
 
     var i;
     var topThree = "";
@@ -228,7 +230,7 @@ function publishResults(jsonResponse){
         </div>
         <div class="carousel-item text-center">
           <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score Over Time</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto">Feature in-progress for part 2 of the study</div></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto">${historyList}</div></row></div>
 
           ${carouselInfoButton}
         </div>
@@ -260,6 +262,20 @@ function publishResults(jsonResponse){
     $('#PartisanNavMTurk').replaceWith(partisanNavMTurk);
     generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
 }
+
+function parseHistoryJSON(history){
+  let summaryHistory = [];
+  for (i = 0; i < history.length; i++){
+    currDate = history[i]['date'];
+    currScore = history[i]['score'];
+    currTopThree = history[i]['topthree'];
+    summaryHistory.push([currDate, currScore, currTopThree]);
+  }
+
+  return summaryHistory;
+}
+
+
 
 function partisanScoreToAlignment(partisanValue){
   var whole = Math.round(partisanValue);
