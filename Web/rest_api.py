@@ -33,10 +33,11 @@ def receive():
             hist_json = model.history.to_json(orient='index')
             db.add_document(req_data['ID'], hist_json, model.score, model.top_three, model.top_three_veracity)
             #TODO: CHANGE THIS LATER
-            #filtered_history = db.filter_history_user(req_data['ID'])
-            filtered_history = db.filter_history_user("eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf")
+            filtered_history = db.filter_history_user(req_data['ID'])
+            neighbours = db.get_neighbours(req_data['ID'], model.score)
+            #filtered_history = db.filter_history_user("eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf")
             print(filtered_history)
-            returnVal = "{"+ "\"score\""+":" + str(model.score) + ",\"topthree\":"  + str(model.top_three) + ",\"topthreeveracity\":" + str(model.top_three_veracity)
+            returnVal = "{"+ "\"score\""+":" + str(model.score) + ",\"topthree\":"  + str(model.top_three) + ",\"topthreeveracity\":" + str(model.top_three_veracity) + ",\"neighbours\":" + str(neighbours)
             returnVal = returnVal + ",\"history\":["
             for entry in filtered_history:
                 returnVal = returnVal + entry + ","

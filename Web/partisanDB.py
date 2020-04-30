@@ -3,6 +3,7 @@ import couchdb2
 from datetime import datetime, date
 from collections import defaultdict, OrderedDict
 import pytz
+import ast
 
 class PartisanDB:
 
@@ -20,14 +21,14 @@ class PartisanDB:
             db = self.couchserver.create(self.db_name)
         self.db = db
 
-    def add_document(self, id, history, curr_score, top_three, top_three_veracity):
+    def add_document(self, id, history, curr_score, top_three, top_three_veracity, neighbours):
         """
         id - refers to unique browser fingerprint
         history - refers to only website visit data that has a partisan value tied to it
         curr_score - refers to the calculation as a result of history
         """
         datetime.now(self.timezone)
-        document = {'userid':id,'date':datetime.now().strftime("%d %m %Y %H:%M:%S"), 'hist':history, 'score':curr_score, 'top three':top_three, 'top three veracity':top_three_veracity}
+        document = {'userid':id,'date':datetime.now().strftime("%d %m %Y %H:%M:%S"), 'hist':history, 'score':curr_score, 'top three':top_three, 'top three veracity':top_three_veracity, 'neighbours':neighbours}
         self.db.put(document)
 
     def generate_history_user(self, input_id):
@@ -91,11 +92,55 @@ class PartisanDB:
 
         return filtered_history
 
+    def generate_neighbours(self, input_id, score):
+        userHistoryDict = defaultdict(list)
+        for entry in db:
+            #data = ast.literal_eval(entry['hist'])
+            try:
+                if (type(entry['userid']) is not ('NoneType' or 'OrderedDict')):
+                    curr_id = entry['userid']
+                    curr_score = entry['score']
+                    curr_date = entry['date']
+                    if (curr_id != input_id) and abs(curr_score - score) < 0.5:
+                        print(curr_score, curr_id)
+                        userHistoryDict[curr_date].append(entry)
+            except:
+                continue
+        return userHistoryDict
+
+    #for each n unique neighbours, get their top three sites & corresponding veracity.
+    def parse_neighbours(self, userHistoryDict, n=3):
+        neighboursList, neighbours = "", []
+        for item in sorted(userHistoryDict.keys(), reverse=True):
+            if len(neighbours) == n:
+                return neighboursList
+            currItem = userHistoryDict[item]
+            currUser = currItem[0]['userid']
+            #print(currUser)
+            try:
+                currTopThree = currItem[0]['top three']
+                print(currUser, currTopThree)
+                if currUser not in neighbours:
+                    curr = "{\"topthree\":" + str(currTopThree) + ",\"topthreeveracity\":" + str(currItem[0]['top three veracity']) + "}"
+                    curr = curr.replace("'", "\"")
+                    neighboursList += curr
+                    neighbours.append(currUser)
+            except:
+                print(item, "failed to retrieve top three entry")
+        return neighboursList
+
+    def get_neighbours(self, input_id, score):
+        userHistoryDict = generate_neighbours(self, input_id, score)
+        neighboursList = parse_neighbours(self, userHistoryDict)
+        return neighboursList
+
+
 
 
 """
 TODO: Generates history of all users
 import couchdb2
+import ast
 from collections import defaultdict, OrderedDict
 from datetime import datetime
 user="admin"
@@ -106,6 +151,50 @@ db_name = "partisan_scores"
 db = couchserver[db_name]
 userDict = defaultdict(list)
 input_id="eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf"
+score = -0.10810810810810811
+
+#here's the part where we comb through and find other users within 0.02
+userHistoryDict = defaultdict(list)
+for entry in db:
+    #data = ast.literal_eval(entry['hist'])
+    try:
+        if (type(entry['userid']) is not ('NoneType' or 'OrderedDict')):
+            curr_id = entry['userid']
+            curr_score = entry['score']
+            curr_date = entry['date']
+            if (curr_id != input_id) and abs(curr_score - score) < 0.5:
+                print(curr_score, curr_id)
+                userHistoryDict[curr_date].append(entry)
+    except:
+        continue
+
+n = 3
+neighboursList = []
+neighbours = []
+for item in sorted(userHistoryDict.keys(), reverse=True):
+    if len(neighboursList) == n:
+        break
+        #return neighboursList
+    currItem = userHistoryDict[item]
+    currUser = currItem[0]['userid']
+    #print(currUser)
+    try:
+        currTopThree = currItem[0]['top three']
+        print(currUser, currTopThree)
+        if currUser not in neighbours:
+            curr = "{\"topthree\":" + str(currTopThree) + ",\"topthreeveracity\":" + str(currItem[0]['top three veracity']) + "}"
+            neighboursList.append(curr)
+            neighbours.append(currUser)
+    except:
+        print(item, "failed to retrieve top three entry")
+        continue
+
+
+
+
+print(neighboursDict)
+
+
 
 for id in db:
   for k,v in id.items():

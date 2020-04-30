@@ -17,6 +17,7 @@
     font-size: 20px;
 }
 
+
 #partisanScoreInfoModalContent{
   background-color: #74b9ff;
 
@@ -30,6 +31,10 @@
 #termsConditionsModalContent{
   background-color: #74b9ff;
   font-size: 12px;
+}
+
+#partisanscaleresult{
+  font-size: 10px;
 }
 
 #PartisanNavMTurk{

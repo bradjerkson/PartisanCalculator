@@ -197,6 +197,7 @@ function publishResults(jsonResponse){
     var alignment = partisanScoreToAlignment(jsonResponse["score"]);
     var content_veracity = jsonResponse["topthreeveracity"];
     var historyList = parseHistoryJSON(jsonResponse["history"]);
+    console.log(historyList);
 
     var i;
     var topThree = "";
@@ -230,7 +231,7 @@ function publishResults(jsonResponse){
         </div>
         <div class="carousel-item text-center">
           <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>Your Partisan Score Over Time</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto">${historyList}</div></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanscaleresult" class="my-auto"></div></row></div>
 
           ${carouselInfoButton}
         </div>
@@ -261,15 +262,26 @@ function publishResults(jsonResponse){
     }
     $('#PartisanNavMTurk').replaceWith(partisanNavMTurk);
     generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
+    generatePartisanHistoryLinePlot(historyList);
 }
 
 function parseHistoryJSON(history){
   let summaryHistory = [];
-  for (i = 0; i < history.length; i++){
-    currDate = history[i]['date'];
-    currScore = history[i]['score'];
-    currTopThree = history[i]['topthree'];
-    summaryHistory.push([currDate, currScore, currTopThree]);
+  // y/x = a => x = y/a
+  maxEntries = 5;
+  allEntries = history.length;
+  equidistance = Math.floor(allEntries/maxEntries);
+  console.log(maxEntries, allEntries, equidistance);
+
+  for (i = 0; i < allEntries; i++){
+    if(i%equidistance == 0){
+      currDate = history[i]['date'].split(" ").slice(0,3).join("/");
+      currScore = history[i]['score'];
+      currTopThree = history[i]['topthree'];
+      //currResult = `${currDate} ${currScore.toFixed(4)} ${currTopThree} <br>`
+      //summaryHistory.push(currResult);
+      summaryHistory.push({date: d3.timeParse("%d/%/m/%Y"), value: currScore});
+    }
   }
 
   return summaryHistory;
@@ -301,17 +313,59 @@ function partisanScoreToAlignment(partisanValue){
   }
 }
 
+function generatePartisanHistoryLinePlot(data){
+  let margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 260 - margin.left - margin.right,
+    height = 50 - margin.top - margin.bottom;
+
+  let svg = d3.select("#partisanscaleresult")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+
+    let x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+    let y = d3.scaleTime()
+      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d){ return x(d.date)})
+        .y(function(d){ return y(d.value)})
+        )
+
+
+
+}
+
+
 //Conducts the generation of of the graph visualisation
 //TODO: Alignment seems to be slightly skewed on X axis
 function generatePartisanScaleResult(partisanvalue){
-  var width = 400,
+  let width = 400,
       height = 100;
 
-  var data = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  let data = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
 
 
   // Append SVG
-  var svg = d3.select("#PartisanScoreValueOutput1")
+  let svg = d3.select("#PartisanScoreValueOutput1")
               .append("svg")
               .attr("width", width)
               .attr("height", height)
@@ -321,14 +375,14 @@ function generatePartisanScaleResult(partisanvalue){
 
 
   // Create scale
-  var scale = d3.scaleLinear()
+  let scale = d3.scaleLinear()
                 .domain([-5,5])
                 .range([0, width-100]);
 
   console.log("creating partisan scale");
   console.log(scale(partisanvalue));
 
-  var bar1 = svg.append("rect")
+  let bar1 = svg.append("rect")
         .attr("fill", "blue")
         .attr("x", 600)
         .attr("y", 0)
@@ -336,7 +390,7 @@ function generatePartisanScaleResult(partisanvalue){
         .attr("width", 2)
 
   // Add scales to axis
-  var x_axis = d3.axisBottom()
+  let x_axis = d3.axisBottom()
                  .scale(scale)
                  .tickValues(data);
 
