@@ -86,15 +86,16 @@ class PartisanDB:
         for entry in dates:
 
             hist = user_history[entry[1]]
-            relevant_hist = "{" + "\"date\"" + ":\"" + str(hist['date']) + "\",\"score\":" + str(hist['score']) + ",\"topthree\":" + str(hist['top three']) + ",\"topthreeveracity\":" + str(hist['top three veracity']) + "}"
+            relevant_hist = "{" + "\"date\"" + ":\"" + str(hist['date']) + "\",\"score\":" + str(hist['score']) + ",\"topthree\":" + str(hist['top three']) + ",\"topthreeveracity\":" + str(hist['top three veracity']) + "},"
             relevant_hist = relevant_hist.replace("'", "\"")
             filtered_history.append(relevant_hist)
 
+        filtered_history.rstrip(",")
         return filtered_history
 
     def generate_neighbours(self, input_id, score):
         userHistoryDict = defaultdict(list)
-        for entry in db:
+        for entry in self.db:
             #data = ast.literal_eval(entry['hist'])
             try:
                 if (type(entry['userid']) is not ('NoneType' or 'OrderedDict')):
@@ -130,8 +131,8 @@ class PartisanDB:
         return neighboursList
 
     def get_neighbours(self, input_id, score):
-        userHistoryDict = generate_neighbours(self, input_id, score)
-        neighboursList = parse_neighbours(self, userHistoryDict)
+        userHistoryDict = self.generate_neighbours(input_id, score)
+        neighboursList = self.parse_neighbours(userHistoryDict)
         return neighboursList
 
 
