@@ -86,11 +86,10 @@ class PartisanDB:
         for entry in dates:
 
             hist = user_history[entry[1]]
-            relevant_hist = "{" + "\"date\"" + ":\"" + str(hist['date']) + "\",\"score\":" + str(hist['score']) + ",\"topthree\":" + str(hist['top three']) + ",\"topthreeveracity\":" + str(hist['top three veracity']) + "},"
+            relevant_hist = "{" + "\"date\"" + ":\"" + str(hist['date']) + "\",\"score\":" + str(hist['score']) + ",\"topthree\":" + str(hist['top three']) + ",\"topthreeveracity\":" + str(hist['top three veracity']) + "}"
             relevant_hist = relevant_hist.replace("'", "\"")
             filtered_history.append(relevant_hist)
 
-        filtered_history.rstrip(",")
         return filtered_history
 
     def generate_neighbours(self, input_id, score):
@@ -114,7 +113,7 @@ class PartisanDB:
         neighboursList, neighbours = "", []
         for item in sorted(userHistoryDict.keys(), reverse=True):
             if len(neighbours) == n:
-                return neighboursList
+                return neighboursList.rstrip(",")
             currItem = userHistoryDict[item]
             currUser = currItem[0]['userid']
             #print(currUser)
@@ -122,13 +121,13 @@ class PartisanDB:
                 currTopThree = currItem[0]['top three']
                 print(currUser, currTopThree)
                 if currUser not in neighbours:
-                    curr = "{\"topthree\":" + str(currTopThree) + ",\"topthreeveracity\":" + str(currItem[0]['top three veracity']) + "}"
+                    curr = "{\"topthree\":" + str(currTopThree) + ",\"topthreeveracity\":" + str(currItem[0]['top three veracity']) + "},"
                     curr = curr.replace("'", "\"")
                     neighboursList += curr
                     neighbours.append(currUser)
             except:
                 print(item, "failed to retrieve top three entry")
-        return neighboursList
+        return neighboursList.rstrip(",")
 
     def get_neighbours(self, input_id, score):
         userHistoryDict = self.generate_neighbours(input_id, score)
