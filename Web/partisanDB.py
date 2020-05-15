@@ -21,14 +21,14 @@ class PartisanDB:
             db = self.couchserver.create(self.db_name)
         self.db = db
 
-    def add_document(self, id, history, curr_score, top_three, top_three_veracity, neighbours):
+    def add_document(self, id, consent, selfscore, history, curr_score, top_three, top_three_veracity, neighbours):
         """
         id - refers to unique browser fingerprint
         history - refers to only website visit data that has a partisan value tied to it
         curr_score - refers to the calculation as a result of history
         """
         datetime.now(self.timezone)
-        document = {'userid':id,'date':datetime.now().strftime("%d %m %Y %H:%M:%S"), 'hist':history, 'score':curr_score, 'top three':top_three, 'top three veracity':top_three_veracity, 'neighbours':neighbours}
+        document = {'userid':id,'date':datetime.now().strftime("%d %m %Y %H:%M:%S"), 'hist':history, 'score':curr_score, 'top three':top_three, 'top three veracity':top_three_veracity, 'neighbours':neighbours, 'consent':consent, 'selfscore':selfscore}
         self.db.put(document)
 
     def generate_history_user(self, input_id):

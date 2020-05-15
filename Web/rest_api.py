@@ -19,6 +19,8 @@ def receive():
     print("starting")
     req_data = request.get_json(force=True)
     print(req_data['ID'])
+    print(req_data['consent'])
+    print(req_data['selfscore'])
     if req_data == None:
         return "nothing requested!"
     else:
@@ -32,7 +34,7 @@ def receive():
             db = PartisanDB()
             hist_json = model.history.to_json(orient='index')
             neighbours = db.get_neighbours(req_data['ID'], model.score)
-            db.add_document(req_data['ID'], hist_json, model.score, model.top_three, model.top_three_veracity, neighbours)
+            db.add_document(req_data['ID'],req_data['consent'],req_data['selfscore'], hist_json, model.score, model.top_three, model.top_three_veracity, neighbours)
             #TODO: CHANGE THIS LATER
             filtered_history = db.filter_history_user(req_data['ID'])
 
