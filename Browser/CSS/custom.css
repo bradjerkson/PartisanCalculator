@@ -18,9 +18,18 @@
 }
 
 
-#partisanScoreInfoModalContent{
+#partisanScoreInfoModalContent,
+#userSelfScoreModalContent{
   background-color: #74b9ff;
 
+
+}
+#termsConditionsNewUserModal .modal-header .close {
+  display:none;
+}
+
+#userSelfScoreModalContent .modal-header .close {
+  display:none;
 }
 
 #settingsModalContent{
@@ -40,6 +49,10 @@
 #PartisanNavMTurk{
   color: white;
   font-size: 10px;
+}
+
+#userSelfScoreModalBody{
+  font-size: 12px;
 }
 
 #optOutLink:hover{
@@ -84,6 +97,11 @@
 .fade-in {
   opacity: 0;
   animation: fadeIn 4s ease-in 1 forwards;
+}
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+  filter: invert(1);
 }
 
 @font-face{

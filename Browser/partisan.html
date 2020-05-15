@@ -75,6 +75,46 @@
             </div>
           </div>
 
+
+        <!-- Modal for New User T&Cs -->
+        <div class="modal fade" id="termsConditionsNewUserModal" tabindex="-1" role="dialog" aria-labelledby="termsConditionsModal" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" id="termsConditionsModalContent">
+              <div class="modal-header">
+                <h5 class="modal-title" id="termsConditionsModalTitle">Terms & Conditions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body font-weight-light">
+                The terms below have been provided to you, the participant, at a time prior to undertaking this study. The T&Cs below have been listed for your convenient access. <br>
+                1.	I consent to participate in this project, the details of which have been explained to me, and I have been provided with a written plain language statement to keep. <br>
+                2.	I understand that the topics used in the project are related to contemporary news items and include politics (liberal and conservative views), societal issues and climate change.<br>
+                3.	I understand that the purpose of this research will involve the installation of a browser extension to collect my browsing data, in order to analyse news webpages visited. <br>
+                4.	In this project, I will be required to utilise the aforementioned browser for any form of news/web-surfing purposes.<br>
+                5.	I understand that no sensitive information including personal identity data, IP address, or any other data that can be used to de-anonymise me will be stored.<br>
+                6.	I understand that my participation in this project is for research purposes only.<br>
+                7.	I understand that I will require a minimum of two months of browsing history to participate in this study.<br>
+                8.	I acknowledge that the possible effects of participating in this research project have been explained to my satisfaction.<br>
+                9.	At the conclusion this project, I will be required to answer a questionnaire about the browser extension, which have been explained to me.<br>
+                10.	I understand that my opinions and views expressed during this study will remain completely confidential and that I can report any occurrence of discomfort immediately to the experimenter and quit the study without giving any further reason.<br>
+                11.	I understand that my responses and interactions with the news recommender system will be collected during the study.<br>
+                12.	I understand that my participation is voluntary and that I am free to withdraw from this project anytime without explanation or prejudice and to withdraw any unprocessed data that I have provided. <br>
+                13.	I understand that the data from this research will be stored at the University of Melbourne and will be destroyed after 5 years after the date of the last publication. <br>
+                14.	I have been informed that the confidentiality of the information I provide will be safeguarded subject to any legal requirements; my data will be password protected and accessible only by the named researchers.<br>
+                15.	I understand that my decision on participation in this project will not affect my grades in the courses taught or related to any of the researchers involved in this project.<br>
+                16.	I understand that I can request publications arising from this research.<br>
+                17.	I understand that after click the "I consent" button below, it will be retained by the researcher.  <br>
+
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="termsConditionsModalConsentButton" class="btn btn-partisan btn-primary" data-toggle="modal" data-target="#userSelfScoreModal" data-dismiss="modal">I Consent</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Modal for T&Cs -->
         <div class="modal fade" id="termsConditionsModal" tabindex="-1" role="dialog" aria-labelledby="termsConditionsModal" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -114,6 +154,48 @@
           </div>
         </div>
 
+
+        <div class="modal fade" id="userSelfScoreModal" tabindex="-1" role="dialog" aria-labelledby="userSelfScoreModal" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content" id="userSelfScoreModalContent">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userSelfScoreModalTitle">Pre-Survey</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div id="userSelfScoreModalBody" class="modal-body font-weight-light">
+                Estimate your current partisan score on a scale between -5 to 5.<br><br>
+                The stronger the <span class="font-weight-bold">negative</span> value, the more <span class="font-weight-bold">left-leaning</span>. Example news sources: Huffington Post, New York Times, Mother Jones
+                <br>The stronger the <span class="font-weight-bold">positive value</span>, the more <span class="font-weight-bold">right-leaning</span>. Example news sources: Fox News, Breitbart, National Review
+                <br>Values closer to <span class="font-weight-bold">zero</span> are associated with <span class="font-weight-bold">centrist</span> perspectives. Example news sources: The Economist, Wall Street Journal, BBC News
+                <form>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1"></label>
+                    <select class="form-control" id="selfScoreFormControlSelect">
+                      <option value="-5">-5</option>
+                      <option value="-4">-4</option>
+                      <option value="-3">-3</option>
+                      <option value="-2">-2</option>
+                      <option value="-1">-1</option>
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" id="userSelfScoreModalConsentButton" class="btn btn-partisan btn-primary" data-dismiss="modal">Submit</button>
+                  </div>
+                </form>
+                </div>
+
+            </div>
+          </div>
+        </div>
+
         <!-- Modal to explain the partisan score -->
         <div class="modal fade" id="partisanScoreInfoModal" tabindex="-1" role="dialog" aria-labelledby="partisanScoreInfoModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -141,6 +223,8 @@
             </div>
           </div>
         </div>
+
+
 
         <div id="fillerDiv" class = "row pt-5" style="height:200px;">
           <!-- Filler -->

@@ -50,6 +50,24 @@ function generateID(){
   return userid;
 }
 
+function consentAndTCs(){
+  console.log("starting TCs");
+  if (localStorage.getItem("acceptedTCs") === null){
+    $('#termsConditionsNewUserModal').modal('show');
+  }
+}
+
+function predictScore(){
+  if (localStorage.getItem("acceptedTCs") === null && localStorage.getItem("predictScore") === null){
+    let a = $("#selfScoreFormControlSelect").val();
+    console.log("declared self score:", a);
+    localStorage.setItem("acceptedTCs", "True");
+    localStorage.setItem("predictScore", a);
+
+  }
+
+}
+
 
 
 function getHistory(id){
@@ -58,6 +76,9 @@ function getHistory(id){
     console.log("Getting History");
 
     $("#generateHistoryButton").replaceWith('<button id="generateHistoryButtonLoading" class="btn btn-partisan mt-2" type="button" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span></button>');
+
+    //Here we create the "Subjective Ground Truth" prompt, and T&Cs prompt.
+
 
     let seconds = 1000 * 60 * 60 * 24 * 7 * 365;
     let oneYearAgo = (new Date).getTime() - seconds;
@@ -115,6 +136,9 @@ function parseHistory(result){
         output_obj.urls.push(out_str);
     }
     output_obj.ID = id;
+    output_obj.consent = localStorage.getItem("acceptedTCs");
+    output_obj.selfscore = localStorage.getItem("predictScore");
+
     var out = JSON.stringify(output_obj);
     //this line below generates all browsing history
     //document.body.appendChild(document.createTextNode(out));
@@ -407,10 +431,22 @@ function generatePartisanScaleResult(partisanvalue){
   d3.select("g").style('transform', 'translate(10%,10%)')
 }
 
+$(window).on('load', function(){
+  consentAndTCs();
+});
+
 //Things to execute upon the document fully loading
 $(document).ready(function () {
 
+
+
     id = generateID();
+
+    $('#userSelfScoreModalConsentButton').on('click', function(event){
+      event.preventDefault();
+      predictScore();
+
+    });
 
     //Generates our previous settings
     if(localStorage.getItem("stopRecording") == "true"){

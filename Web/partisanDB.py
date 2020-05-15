@@ -110,10 +110,10 @@ class PartisanDB:
 
     #for each n unique neighbours, get their top three sites & corresponding veracity.
     def parse_neighbours(self, userHistoryDict, n=3):
-        neighboursList, neighbours = "", []
+        neighboursList, neighbours = "[", []
         for item in sorted(userHistoryDict.keys(), reverse=True):
             if len(neighbours) == n:
-                return neighboursList.rstrip(",")
+                return neighboursList.rstrip(",") + "]"
             currItem = userHistoryDict[item]
             currUser = currItem[0]['userid']
             #print(currUser)
@@ -127,7 +127,7 @@ class PartisanDB:
                     neighbours.append(currUser)
             except:
                 print(item, "failed to retrieve top three entry")
-        return neighboursList.rstrip(",")
+        return neighboursList.rstrip(",") + "]"
 
     def get_neighbours(self, input_id, score):
         userHistoryDict = self.generate_neighbours(input_id, score)
