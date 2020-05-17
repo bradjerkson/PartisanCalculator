@@ -221,6 +221,8 @@ function publishResults(jsonResponse){
     var alignment = partisanScoreToAlignment(jsonResponse["score"]);
     var content_veracity = jsonResponse["topthreeveracity"];
     var historyList = parseHistoryJSON(jsonResponse["history"]);
+    var neighbours = jsonResponse["neighbours"];
+
     console.log(historyList);
 
     var i;
@@ -260,8 +262,8 @@ function publishResults(jsonResponse){
           ${carouselInfoButton}
         </div>
         <div class="carousel-item text-center">
-          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>How You Compare To Other Users</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Feature in-progress for part 2 of the study</div></row></div>
+          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>What Similar Users Are Viewing</h3></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanNeighbours" class="my-auto row"></div></row></div>
 
           ${carouselInfoButton}
         </div>
@@ -286,7 +288,24 @@ function publishResults(jsonResponse){
     }
     $('#PartisanNavMTurk').replaceWith(partisanNavMTurk);
     generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
-    generatePartisanHistoryLinePlot(historyList);
+
+    //Ensure we have adequate history here
+    if(historyList.length > 3){
+      generatePartisanHistoryLinePlot(historyList);
+    }
+    else{
+      $('#partisanscaleresult').append("Sorry, your browsing history has insufficient data. Keep on browsing for a longer period!");
+    }
+
+    if(neighbours.length > 2){
+      generatePartisanNeighbours(neighbours);
+    }
+    else{
+      $('#partisanscaleresult').append("Sorry, your browsing history has insufficient data. Keep on browsing for a longer period!");
+    }
+
+
+
 }
 
 function parseHistoryJSON(history){
@@ -304,7 +323,12 @@ function parseHistoryJSON(history){
       currTopThree = history[i]['topthree'];
       //currResult = `${currDate} ${currScore.toFixed(4)} ${currTopThree} <br>`
       //summaryHistory.push(currResult);
-      summaryHistory.push({date: d3.timeParse("%d/%/m/%Y"), value: currScore});
+
+      //let formatDate = d3.timeFormat("%d/%m/%Y");
+      let formatDate = d3.timeParse("%d/%m/%Y");
+
+      console.log(currDate, currScore, formatDate(currDate));
+      summaryHistory.push({date: formatDate(currDate), value: currScore});
     }
   }
 
@@ -337,45 +361,102 @@ function partisanScoreToAlignment(partisanValue){
   }
 }
 
-function generatePartisanHistoryLinePlot(data){
-  let margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 260 - margin.left - margin.right,
-    height = 50 - margin.top - margin.bottom;
+function generatePartisanHistoryLinePlot(dataset){
+  console.log(dataset[0].date);
 
-  let svg = d3.select("#partisanscaleresult")
-    .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+  let margin = {top: 10, right: 30, bottom: 30, left: 50},
+    width = 420 - margin.left - margin.right,
+    height = 110 - margin.top - margin.bottom;
 
+  let n = dataset.length;
 
-    let x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
+  let x = d3.scaleTime()
+      .domain(d3.extent(dataset, function(d) { return d.date; }))
       .range([ 0, width ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
 
-    let y = d3.scaleTime()
-      .domain([0, d3.max(data, function(d) { return +d.value; })])
+  let svg = d3.select("#partisanscaleresult").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  let y = d3.scaleLinear()
+      .domain([d3.min(dataset, function(d) { return +d.value; }), d3.max(dataset, function(d) { return +d.value; })])
       .range([ height, 0 ]);
     svg.append("g")
-      .call(d3.axisLeft(y));
-
-    svg.append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line()
-        .x(function(d){ return x(d.date)})
-        .y(function(d){ return y(d.value)})
-        )
+      .call(d3.axisLeft(y).ticks(6));
 
 
 
+  let line = d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) });
+
+
+
+  //dataset = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } });
+
+
+  svg.append("path")
+    .datum(dataset) // 10. Binds data to the line
+    .attr("class", "line") // Assign a class for styling
+    .attr("d", line); // 11. Calls the line generator
+
+  svg.selectAll(".dot")
+      .data(dataset)
+    .enter().append("circle") // Uses the enter().append() method
+      .attr("class", "dot") // Assign a class for styling
+      .attr("cx", function(d, i) { return x(i) })
+      .attr("cy", function(d) { return y(d.value) })
+      .attr("r", 5)
+        .on("mouseover", function(a, b, c) {
+    			console.log(a)
+          this.attr('class', 'focus')
+  		})
+        .on("mouseout", function() {  })
+
+}
+
+
+function generatePartisanNeighbours(neighbours){
+  console.log("neighbours", neighbours);
+
+
+  for (i = 0; i < neighbours.length-1; i++){
+
+    html = `<div class="neighboursCol col-sm style="height: 8rem;">
+              <div id="neighbour${i}" style="width: 12rem;">
+                <h6>Neighbour #${i+1}</h6>
+                <a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[0]}'>${neighbours[i].topthree[0]}</a><br>
+                <a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[1]}'>${neighbours[i].topthree[1]}</a><br>
+                <a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[2]}'>${neighbours[i].topthree[2]}</a><br>
+              </div>
+            </div>
+            `
+
+    $('#partisanNeighbours').append(html);
+  }
+
+/*
+  html = `<div class="neighboursCol col-sm">
+            <div id="neighbour${i}" class="card" style="width: 9rem; ">
+              <div class="card-header">
+                Neighbour ${i}
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[0]}'>${neighbours[i].topthree[0]}</a></li>
+                <li class="list-group-item"><a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[1]}'>${neighbours[i].topthree[1]}</a></li>
+                <li class="list-group-item"><a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[2]}'>${neighbours[i].topthree[2]}</a></li>
+              </ul>
+            </div>
+          </div>
+        `
+*/
 }
 
 
@@ -430,6 +511,9 @@ function generatePartisanScaleResult(partisanvalue){
     .ease(d3.easeElastic);
   d3.select("g").style('transform', 'translate(10%,10%)')
 }
+
+
+
 
 $(window).on('load', function(){
   consentAndTCs();

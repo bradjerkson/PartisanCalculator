@@ -64,6 +64,17 @@
     font-size: 18px;
 }
 
+#partisanNeighbours{
+  font-size: 12px;
+  margin: auto;
+}
+
+
+.neighboursCol{
+  height: 25rem;
+
+}
+
 .partisan-error-text{
     text-align: center;
     margin: auto;
@@ -112,4 +123,32 @@
 @font-face{
     font-family: 'FrancophilSans';
     src: url('../Fonts/FrancophilSans.ttf');
+}
+
+path.line
+{
+    fill: none;
+    stroke: #00b894;
+    stroke-width: 2px;
+}
+
+.dot {
+    fill: #00b894;
+    stroke: #fff;
+}
+
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+hr {
+  margin: 0em;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
