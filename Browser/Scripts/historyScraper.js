@@ -13,7 +13,8 @@ function retrieveToggleSettings(){
   $('#checkbox-stoprecording').replaceWith(`<input id="checkbox-stoprecording" type="checkbox" checked data-toggle="toggle" data-size="sm" >`)
 }
 
-//Utility function to generate our MTurk string for reward redemption
+//Utility function to generate our MTurk string for reward redemption.
+//Helps give MTurk workers who complete tasks a memorable code, for easy cross-checking
 function returnRandomAnimalName(){
   //https://github.com/boennemann/animals
   animals = ['aardvark', 'albatross', 'alligator', 'alpaca', 'ant', 'anteater', 'antelope', 'ape', 'armadillo', 'baboon', 'badger', 'barracuda', 'bat', 'bear', 'beaver', 'bee', 'bison', 'boar', 'buffalo', 'butterfly', 'camel', 'capybara', 'caribou', 'cassowary', 'cat', 'caterpillar', 'cattle', 'chamois', 'cheetah', 'chicken', 'chimpanzee', 'chinchilla', 'chough', 'clam', 'cobra', 'cockroach', 'cod', 'cormorant', 'coyote', 'crab', 'crane', 'crocodile', 'crow', 'curlew', 'deer', 'dinosaur', 'dog', 'dogfish', 'dolphin', 'donkey', 'dotterel', 'dove', 'dragonfly', 'duck', 'dugong', 'dunlin', 'eagle', 'echidna', 'eel', 'eland', 'elephant', 'elephant-seal', 'elk', 'emu', 'falcon', 'ferret', 'finch', 'fish', 'flamingo', 'fly', 'fox', 'frog', 'gaur', 'gazelle', 'gerbil', 'giant-panda', 'giraffe', 'gnat', 'gnu', 'goat', 'goose', 'goldfinch', 'goldfish', 'gorilla', 'goshawk', 'grasshopper', 'grouse', 'guanaco', 'guinea-fowl', 'guinea-pig', 'gull', 'hamster', 'hare', 'hawk', 'hedgehog', 'heron', 'herring', 'hippopotamus', 'hornet', 'horse', 'human', 'hummingbird', 'hyena', 'ibex', 'ibis', 'jackal', 'jaguar', 'jay', 'jellyfish', 'kangaroo', 'kingfisher', 'koala', 'komodo-dragon', 'kookabura', 'kouprey', 'kudu', 'lapwing', 'lark', 'lemur', 'leopard', 'lion', 'llama', 'lobster', 'locust', 'loris', 'louse', 'lyrebird', 'magpie', 'mallard', 'manatee', 'mandrill', 'mantis', 'marten', 'meerkat', 'mink', 'mole', 'mongoose', 'monkey', 'moose', 'mouse', 'mosquito', 'mule', 'narwhal', 'newt', 'nightingale', 'octopus', 'okapi', 'opossum', 'oryx', 'ostrich', 'otter', 'owl', 'ox', 'oyster', 'panther', 'parrot', 'partridge', 'peafowl', 'pelican', 'penguin', 'pheasant', 'pig', 'pigeon', 'polar-bear', 'pony', 'porcupine', 'porpoise', 'prairie-dog', 'quail', 'quelea', 'quetzal', 'rabbit', 'raccoon', 'rail', 'ram', 'rat', 'raven', 'red-deer', 'red-panda', 'reindeer', 'rhinoceros', 'rook', 'salamander', 'salmon', 'sand-dollar', 'sandpiper', 'sardine', 'scorpion', 'sea-lion', 'sea-urchin', 'seahorse', 'seal', 'shark', 'sheep', 'shrew', 'skunk', 'snail', 'snake', 'sparrow', 'spider', 'spoonbill', 'squid', 'squirrel', 'starling', 'stingray', 'stinkbug', 'stork', 'swallow', 'swan', 'tapir', 'tarsier', 'termite', 'tiger', 'toad', 'trout', 'turkey', 'turtle', 'vicuña', 'viper', 'vulture', 'wallaby', 'walrus', 'wasp', 'water-buffalo', 'weasel', 'whale', 'wolf', 'wolverine', 'wombat', 'woodcock', 'woodpecker', 'worm', 'wren', 'yak', 'zebra']
@@ -50,6 +51,7 @@ function generateID(){
   return userid;
 }
 
+//This appears on first launch, users need to accept T&Cs to use the app
 function consentAndTCs(){
   console.log("starting TCs");
   if (localStorage.getItem("acceptedTCs") === null){
@@ -57,6 +59,9 @@ function consentAndTCs(){
   }
 }
 
+//This also appears on first launch, users need to select from a dropdown list,
+//predicting where they are out of one of 7 alignment options, ranging from
+// extreme left to extreme right
 function predictScore(){
   if (localStorage.getItem("acceptedTCs") === null && localStorage.getItem("predictScore") === null){
     let a = $("#selfScoreFormControlSelect").val();
@@ -69,7 +74,8 @@ function predictScore(){
 }
 
 
-
+//This generates the last year of browsing history
+//It will proceed to send it to the server, unless 'stop recording' is enabled
 function getHistory(id){
     //here we call chrome.history.search
     //we make its callback function update our html page
@@ -116,7 +122,8 @@ function retrieveLastResults(){
   }
 }
 
-
+//this is used to parse URLs in the browsing history, and only retain their
+//top level domain URL. A JSON string is prepared for sending to the server.
 function parseHistory(result){
     var output_obj = {};
     output_obj.urls = []
@@ -145,6 +152,8 @@ function parseHistory(result){
     return out;
 }
 
+//A method inspired by the link below
+//Allows one to pipe in a URL, and then filter aspects of the URL as required
 function parseURL(url) {
     //https://www.abeautifulsite.net/parsing-urls-in-javascript
     var parser = document.createElement('a'),
@@ -170,6 +179,8 @@ function parseURL(url) {
     };
 }
 
+//Sends the JSON file to the server, and awaits for a response - to send onwards
+//to the next function, or otherwise handle any errors.
 function sendURL(jsonfile, id){
     var request = new XMLHttpRequest();
 
@@ -202,8 +213,8 @@ function sendURL(jsonfile, id){
         $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
     }
 }
-//The following code deals with dynamic webpage generation
 
+//The following code deals with dynamic webpage generation
 function publishResults(jsonResponse){
     //console.log(response);
     //TODO: Catch an internal server error response here
@@ -231,6 +242,7 @@ function publishResults(jsonResponse){
         topThree = topThree + "<a href='#' data-toggle='tooltip' title='Content Reliability: " + content_veracity[i] + "' >" + jsonResponse['topthree'][i] + "</a><br>"
     }
 
+    //The carousel code below corrensponds to the main results data presented to the user
     const carouselInfoButton = '<button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" display=none data-target="#partisanScoreInfoModal">Info</button>'
 
     const carouselCode = `<div id="PartisanCarouselResults" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -279,6 +291,8 @@ function publishResults(jsonResponse){
         $('#insertHere').append(carouselCode);
     }
 
+    //this section generates the MTurk code which participants of the study
+    //will enter into MTurk to redeem their reward.
     let partisanNavMTurk = ""
     if(stopRecording){
       partisanNavMTurk = `<div class="column" id="PartisanNavMTurk"> Data Collection Disabled for 24 Hours </div>`
@@ -297,6 +311,8 @@ function publishResults(jsonResponse){
       $('#partisanscaleresult').append("Sorry, your browsing history has insufficient data. Keep on browsing for a longer period!");
     }
 
+    //If user has no immediate neighbours in terms of political alignment,
+    //generate error message.
     if(neighbours.length > 2){
       generatePartisanNeighbours(neighbours);
     }
@@ -308,6 +324,7 @@ function publishResults(jsonResponse){
 
 }
 
+//We extract the response JSON from the server into separate variables
 function parseHistoryJSON(history){
   let summaryHistory = [];
   // y/x = a => x = y/a
@@ -336,7 +353,7 @@ function parseHistoryJSON(history){
 }
 
 
-
+//We map the partisan variable to its closest political class
 function partisanScoreToAlignment(partisanValue){
   var whole = Math.round(partisanValue);
 
@@ -361,6 +378,7 @@ function partisanScoreToAlignment(partisanValue){
   }
 }
 
+//We generate the user's political alignment trends over time
 function generatePartisanHistoryLinePlot(dataset){
   console.log(dataset[0].date);
 
@@ -422,7 +440,7 @@ function generatePartisanHistoryLinePlot(dataset){
 
 }
 
-
+//We generate the user's neighbours
 function generatePartisanNeighbours(neighbours){
   console.log("neighbours", neighbours);
 

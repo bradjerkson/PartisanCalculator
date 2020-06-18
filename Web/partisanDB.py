@@ -6,7 +6,7 @@ import pytz
 import ast
 
 class PartisanDB:
-
+    #Needed to connect to our CouchDB2 instance
     def __init__(self, user="admin", pw="Welcome123", path="127.0.0.1:5984"):
         self.user = "admin"
         self.pw = "Welcome123"
@@ -21,6 +21,7 @@ class PartisanDB:
             db = self.couchserver.create(self.db_name)
         self.db = db
 
+
     def add_document(self, id, consent, selfscore, history, curr_score, top_three, top_three_veracity, neighbours):
         """
         id - refers to unique browser fingerprint
@@ -34,7 +35,6 @@ class PartisanDB:
     def generate_history_user(self, input_id):
         """
         This will generate every timestamped entry
-        TODO: Check if insufficient entries
         """
         userDict = defaultdict(list)
         for id in self.db:
@@ -44,6 +44,9 @@ class PartisanDB:
         return userDict[input_id]
 
     def filter_history_user(self, input_id):
+        """
+        We filter out same-day history, and consecutive day history
+        """
         user_history = self.generate_history_user(input_id)
         if len(user_history) < 5:
             return '"Insufficient Length"'
@@ -81,7 +84,11 @@ class PartisanDB:
                         pass
         return dates
 
+
     def history_filter(self, dates, user_history):
+    """
+    We extract the history of only required dates
+    """
         filtered_history = []
         for entry in dates:
 
@@ -93,6 +100,9 @@ class PartisanDB:
         return filtered_history
 
     def generate_neighbours(self, input_id, score):
+        """
+        We generate the closest neighbours to the user
+        """
         userHistoryDict = defaultdict(list)
         for entry in self.db:
             #data = ast.literal_eval(entry['hist'])
@@ -152,6 +162,21 @@ db = couchserver[db_name]
 userDict = defaultdict(list)
 input_id="eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf"
 score = -0.10810810810810811
+
+
+#finding the most recent allEntries
+comparison_date_str = '31 05 2020 12:00:00'
+comparison_object = datetime.strptime(comparison_date_str, "%d %m %Y %H:%M:%S")
+for entry in db:
+    try:
+        datetime_object = datetime.strptime(entry['date'], "%d %m %Y %H:%M:%S")
+        if(datetime_object > comparison_object):
+            print(entry['date'], entry['userid'], entry['hist'])
+            #print(entry['date'], entry['userid'])
+    except:
+        continue
+
+
 
 #here's the part where we comb through and find other users within 0.02
 userHistoryDict = defaultdict(list)
