@@ -7,6 +7,9 @@ from collections import Counter
 from sklearn.naive_bayes import GaussianNB
 from scipy import stats
 
+'''
+This is the base class that represents each user
+'''
 class PartisanModel:
     def __init__(self, labels, input_history):
         self.input_history = input_history
@@ -47,13 +50,21 @@ class PartisanModel:
         df['index'] = df['index'].str.replace('www[23]?.', '', case=False)
         return df.sort_values(0, ascending=False)
 
-
+    '''
+    Here we establish which items in their browsing history are news items
+    that correspond with our newsmedia.csv dataset.
+    We also count how many visits to these particular sites.
+    Other browser items are not important.
+    '''
     def generate_user_media_history(self, df, counts):
         out = counts[counts['index'].isin(df['source_url_processed'])]
         df_out = df.loc[df['source_url_processed'].isin(out['index'])]
         final_out = pd.merge(out, df_out, left_on=['index'], right_on=['source_url_processed'])
         return final_out
 
+    '''
+    Here is where we calculate our partisan score equation
+    '''
     def simple_classifier(self, history, scoring):
         scores = history.apply(lambda x: (x[0]) * scoring[x['bias']], axis=1)
 
@@ -69,12 +80,18 @@ class PartisanModel:
         #State needs to be obtained from
         print("Not ready yet")
 
+    '''
+    We generate our top three sites
+    '''
     def generate_fave_site(self, history, counts):
         #This generates the user's top 3 news sites
         top_three = self.history['index'][0:3]
         output = [top_three[0], top_three[1], top_three[2]]
         return output
 
+    '''
+    We generate the factual quality of our top three sites
+    '''
     def fave_sites_veracity(self, history):
         output = []
         for site in self.top_three:
@@ -83,7 +100,9 @@ class PartisanModel:
         print(output)
         return output
 
-
+    '''
+    This is executed when we receive a new client request
+    '''
     def run(self):
         self.df = pd.read_csv(self.labels, header=0)
         self.counts = self.load_instance(self.input_history, self.input_history_type)

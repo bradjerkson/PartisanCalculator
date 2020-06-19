@@ -13,7 +13,8 @@ function retrieveToggleSettings(){
   $('#checkbox-stoprecording').replaceWith(`<input id="checkbox-stoprecording" type="checkbox" checked data-toggle="toggle" data-size="sm" >`)
 }
 
-//Utility function to generate our MTurk string for reward redemption
+//Utility function to generate our MTurk string for reward redemption.
+//Helps give MTurk workers who complete tasks a memorable code, for easy cross-checking
 function returnRandomAnimalName(){
   //https://github.com/boennemann/animals
   animals = ['aardvark', 'albatross', 'alligator', 'alpaca', 'ant', 'anteater', 'antelope', 'ape', 'armadillo', 'baboon', 'badger', 'barracuda', 'bat', 'bear', 'beaver', 'bee', 'bison', 'boar', 'buffalo', 'butterfly', 'camel', 'capybara', 'caribou', 'cassowary', 'cat', 'caterpillar', 'cattle', 'chamois', 'cheetah', 'chicken', 'chimpanzee', 'chinchilla', 'chough', 'clam', 'cobra', 'cockroach', 'cod', 'cormorant', 'coyote', 'crab', 'crane', 'crocodile', 'crow', 'curlew', 'deer', 'dinosaur', 'dog', 'dogfish', 'dolphin', 'donkey', 'dotterel', 'dove', 'dragonfly', 'duck', 'dugong', 'dunlin', 'eagle', 'echidna', 'eel', 'eland', 'elephant', 'elephant-seal', 'elk', 'emu', 'falcon', 'ferret', 'finch', 'fish', 'flamingo', 'fly', 'fox', 'frog', 'gaur', 'gazelle', 'gerbil', 'giant-panda', 'giraffe', 'gnat', 'gnu', 'goat', 'goose', 'goldfinch', 'goldfish', 'gorilla', 'goshawk', 'grasshopper', 'grouse', 'guanaco', 'guinea-fowl', 'guinea-pig', 'gull', 'hamster', 'hare', 'hawk', 'hedgehog', 'heron', 'herring', 'hippopotamus', 'hornet', 'horse', 'human', 'hummingbird', 'hyena', 'ibex', 'ibis', 'jackal', 'jaguar', 'jay', 'jellyfish', 'kangaroo', 'kingfisher', 'koala', 'komodo-dragon', 'kookabura', 'kouprey', 'kudu', 'lapwing', 'lark', 'lemur', 'leopard', 'lion', 'llama', 'lobster', 'locust', 'loris', 'louse', 'lyrebird', 'magpie', 'mallard', 'manatee', 'mandrill', 'mantis', 'marten', 'meerkat', 'mink', 'mole', 'mongoose', 'monkey', 'moose', 'mouse', 'mosquito', 'mule', 'narwhal', 'newt', 'nightingale', 'octopus', 'okapi', 'opossum', 'oryx', 'ostrich', 'otter', 'owl', 'ox', 'oyster', 'panther', 'parrot', 'partridge', 'peafowl', 'pelican', 'penguin', 'pheasant', 'pig', 'pigeon', 'polar-bear', 'pony', 'porcupine', 'porpoise', 'prairie-dog', 'quail', 'quelea', 'quetzal', 'rabbit', 'raccoon', 'rail', 'ram', 'rat', 'raven', 'red-deer', 'red-panda', 'reindeer', 'rhinoceros', 'rook', 'salamander', 'salmon', 'sand-dollar', 'sandpiper', 'sardine', 'scorpion', 'sea-lion', 'sea-urchin', 'seahorse', 'seal', 'shark', 'sheep', 'shrew', 'skunk', 'snail', 'snake', 'sparrow', 'spider', 'spoonbill', 'squid', 'squirrel', 'starling', 'stingray', 'stinkbug', 'stork', 'swallow', 'swan', 'tapir', 'tarsier', 'termite', 'tiger', 'toad', 'trout', 'turkey', 'turtle', 'vicuña', 'viper', 'vulture', 'wallaby', 'walrus', 'wasp', 'water-buffalo', 'weasel', 'whale', 'wolf', 'wolverine', 'wombat', 'woodcock', 'woodpecker', 'worm', 'wren', 'yak', 'zebra']
@@ -50,6 +51,7 @@ function generateID(){
   return userid;
 }
 
+//This appears on first launch, users need to accept T&Cs to use the app
 function consentAndTCs(){
   console.log("starting TCs");
   if (localStorage.getItem("acceptedTCs") === null){
@@ -57,6 +59,9 @@ function consentAndTCs(){
   }
 }
 
+//This also appears on first launch, users need to select from a dropdown list,
+//predicting where they are out of one of 7 alignment options, ranging from
+// extreme left to extreme right
 function predictScore(){
   if (localStorage.getItem("acceptedTCs") === null && localStorage.getItem("predictScore") === null){
     let a = $("#selfScoreFormControlSelect").val();
@@ -69,7 +74,8 @@ function predictScore(){
 }
 
 
-
+//This generates the last year of browsing history
+//It will proceed to send it to the server, unless 'stop recording' is enabled
 function getHistory(id){
     //here we call chrome.history.search
     //we make its callback function update our html page
@@ -116,7 +122,8 @@ function retrieveLastResults(){
   }
 }
 
-
+//this is used to parse URLs in the browsing history, and only retain their
+//top level domain URL. A JSON string is prepared for sending to the server.
 function parseHistory(result){
     var output_obj = {};
     output_obj.urls = []
@@ -145,6 +152,8 @@ function parseHistory(result){
     return out;
 }
 
+//A method inspired by the link below
+//Allows one to pipe in a URL, and then filter aspects of the URL as required
 function parseURL(url) {
     //https://www.abeautifulsite.net/parsing-urls-in-javascript
     var parser = document.createElement('a'),
@@ -170,6 +179,8 @@ function parseURL(url) {
     };
 }
 
+//Sends the JSON file to the server, and awaits for a response - to send onwards
+//to the next function, or otherwise handle any errors.
 function sendURL(jsonfile, id){
     var request = new XMLHttpRequest();
 
@@ -202,8 +213,8 @@ function sendURL(jsonfile, id){
         $("#generateHistoryButtonLoading").replaceWith('<button type="button" class="btn btn-partisan mt-2" id="generateHistoryButton">Generate History</button>');
     }
 }
-//The following code deals with dynamic webpage generation
 
+//The following code deals with dynamic webpage generation
 function publishResults(jsonResponse){
     //console.log(response);
     //TODO: Catch an internal server error response here
@@ -221,6 +232,8 @@ function publishResults(jsonResponse){
     var alignment = partisanScoreToAlignment(jsonResponse["score"]);
     var content_veracity = jsonResponse["topthreeveracity"];
     var historyList = parseHistoryJSON(jsonResponse["history"]);
+    var neighbours = jsonResponse["neighbours"];
+
     console.log(historyList);
 
     var i;
@@ -229,6 +242,7 @@ function publishResults(jsonResponse){
         topThree = topThree + "<a href='#' data-toggle='tooltip' title='Content Reliability: " + content_veracity[i] + "' >" + jsonResponse['topthree'][i] + "</a><br>"
     }
 
+    //The carousel code below corrensponds to the main results data presented to the user
     const carouselInfoButton = '<button class="btn btn-partisan btn-primary mt-2" data-toggle="modal" display=none data-target="#partisanScoreInfoModal">Info</button>'
 
     const carouselCode = `<div id="PartisanCarouselResults" class="carousel slide" data-ride="carousel" data-interval="false">
@@ -260,8 +274,8 @@ function publishResults(jsonResponse){
           ${carouselInfoButton}
         </div>
         <div class="carousel-item text-center">
-          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>How You Compare To Other Users</h3></row></div>
-          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div class="my-auto">Feature in-progress for part 2 of the study</div></row></div>
+          <div id='PartisanScoreTitle3' class='row partisan-text rounded mt-5 justify-content-center'><h3>What Similar Users Are Viewing</h3></row></div>
+          <div id='PartisanScoreValue3' class='row partisan-text align-middle partisan-results rounded mt-2 justify-content-center animated fadeIn'><div id="partisanNeighbours" class="my-auto row"></div></row></div>
 
           ${carouselInfoButton}
         </div>
@@ -277,6 +291,8 @@ function publishResults(jsonResponse){
         $('#insertHere').append(carouselCode);
     }
 
+    //this section generates the MTurk code which participants of the study
+    //will enter into MTurk to redeem their reward.
     let partisanNavMTurk = ""
     if(stopRecording){
       partisanNavMTurk = `<div class="column" id="PartisanNavMTurk"> Data Collection Disabled for 24 Hours </div>`
@@ -286,9 +302,29 @@ function publishResults(jsonResponse){
     }
     $('#PartisanNavMTurk').replaceWith(partisanNavMTurk);
     generatePartisanScaleResult(jsonResponse["score"].toFixed(2));
-    generatePartisanHistoryLinePlot(historyList);
+
+    //Ensure we have adequate history here
+    if(historyList.length > 3){
+      generatePartisanHistoryLinePlot(historyList);
+    }
+    else{
+      $('#partisanscaleresult').append("Sorry, your browsing history has insufficient data. Keep on browsing for a longer period!");
+    }
+
+    //If user has no immediate neighbours in terms of political alignment,
+    //generate error message.
+    if(neighbours.length > 2){
+      generatePartisanNeighbours(neighbours);
+    }
+    else{
+      $('#partisanscaleresult').append("Sorry, your browsing history has insufficient data. Keep on browsing for a longer period!");
+    }
+
+
+
 }
 
+//We extract the response JSON from the server into separate variables
 function parseHistoryJSON(history){
   let summaryHistory = [];
   // y/x = a => x = y/a
@@ -304,7 +340,12 @@ function parseHistoryJSON(history){
       currTopThree = history[i]['topthree'];
       //currResult = `${currDate} ${currScore.toFixed(4)} ${currTopThree} <br>`
       //summaryHistory.push(currResult);
-      summaryHistory.push({date: d3.timeParse("%d/%/m/%Y"), value: currScore});
+
+      //let formatDate = d3.timeFormat("%d/%m/%Y");
+      let formatDate = d3.timeParse("%d/%m/%Y");
+
+      console.log(currDate, currScore, formatDate(currDate));
+      summaryHistory.push({date: formatDate(currDate), value: currScore});
     }
   }
 
@@ -312,18 +353,18 @@ function parseHistoryJSON(history){
 }
 
 
-
+//We map the partisan variable to its closest political class
 function partisanScoreToAlignment(partisanValue){
   var whole = Math.round(partisanValue);
 
   var dict = {
-    3: "Far Right",
-    2: "Right",
-    1: "Right-Centre",
-    0: "Centrist",
-    1: "Left-Centre",
-    2: "Left",
-    3: "Far Left"
+    '3': "Far Right",
+    '2': "Right",
+    '1': "Right-Centre",
+    '0': "Centrist",
+    '-1': "Left-Centre",
+    '-2': "Left",
+    '-3': "Far Left"
   };
 
   if(whole >= 3){
@@ -333,49 +374,107 @@ function partisanScoreToAlignment(partisanValue){
     return "Far Left";
   }
   else{
-    return dict[whole]
+    return dict[String(whole)]
   }
 }
 
-function generatePartisanHistoryLinePlot(data){
-  let margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 260 - margin.left - margin.right,
-    height = 50 - margin.top - margin.bottom;
+//We generate the user's political alignment trends over time
+function generatePartisanHistoryLinePlot(dataset){
+  console.log(dataset[0].date);
 
-  let svg = d3.select("#partisanscaleresult")
-    .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+  let margin = {top: 10, right: 30, bottom: 30, left: 50},
+    width = 420 - margin.left - margin.right,
+    height = 110 - margin.top - margin.bottom;
 
+  let n = dataset.length;
 
-    let x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
+  let x = d3.scaleTime()
+      .domain(d3.extent(dataset, function(d) { return d.date; }))
       .range([ 0, width ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
 
-    let y = d3.scaleTime()
-      .domain([0, d3.max(data, function(d) { return +d.value; })])
+  let svg = d3.select("#partisanscaleresult").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  let y = d3.scaleLinear()
+      .domain([d3.min(dataset, function(d) { return +d.value; }), d3.max(dataset, function(d) { return +d.value; })])
       .range([ height, 0 ]);
     svg.append("g")
-      .call(d3.axisLeft(y));
-
-    svg.append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line()
-        .x(function(d){ return x(d.date)})
-        .y(function(d){ return y(d.value)})
-        )
+      .call(d3.axisLeft(y).ticks(6));
 
 
 
+  let line = d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) });
+
+
+
+  //dataset = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } });
+
+
+  svg.append("path")
+    .datum(dataset) // 10. Binds data to the line
+    .attr("class", "line") // Assign a class for styling
+    .attr("d", line); // 11. Calls the line generator
+
+  svg.selectAll(".dot")
+      .data(dataset)
+    .enter().append("circle") // Uses the enter().append() method
+      .attr("class", "dot") // Assign a class for styling
+      .attr("cx", function(d, i) { return x(i) })
+      .attr("cy", function(d) { return y(d.value) })
+      .attr("r", 5)
+        .on("mouseover", function(a, b, c) {
+    			console.log(a)
+          this.attr('class', 'focus')
+  		})
+        .on("mouseout", function() {  })
+
+}
+
+//We generate the user's neighbours
+function generatePartisanNeighbours(neighbours){
+  console.log("neighbours", neighbours);
+
+
+  for (i = 0; i < neighbours.length-1; i++){
+
+    html = `<div class="neighboursCol col-sm style="height: 8rem;">
+              <div id="neighbour${i}" style="width: 12rem;">
+                <h6>Neighbour #${i+1}</h6>
+                <a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[0]}'>${neighbours[i].topthree[0]}</a><br>
+                <a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[1]}'>${neighbours[i].topthree[1]}</a><br>
+                <a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[2]}'>${neighbours[i].topthree[2]}</a><br>
+              </div>
+            </div>
+            `
+
+    $('#partisanNeighbours').append(html);
+  }
+
+/*
+  html = `<div class="neighboursCol col-sm">
+            <div id="neighbour${i}" class="card" style="width: 9rem; ">
+              <div class="card-header">
+                Neighbour ${i}
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[0]}'>${neighbours[i].topthree[0]}</a></li>
+                <li class="list-group-item"><a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[1]}'>${neighbours[i].topthree[1]}</a></li>
+                <li class="list-group-item"><a href='#' data-toggle='tooltip' title='Content Reliability:${neighbours[i].topthreeveracity[2]}'>${neighbours[i].topthree[2]}</a></li>
+              </ul>
+            </div>
+          </div>
+        `
+*/
 }
 
 
@@ -430,6 +529,9 @@ function generatePartisanScaleResult(partisanvalue){
     .ease(d3.easeElastic);
   d3.select("g").style('transform', 'translate(10%,10%)')
 }
+
+
+
 
 $(window).on('load', function(){
   consentAndTCs();

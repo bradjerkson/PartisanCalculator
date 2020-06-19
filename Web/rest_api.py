@@ -7,7 +7,7 @@ from partisanDB import PartisanDB
 app = Flask(__name__)
 
 #Only handles GET requests. Effectively a read-only API.
-
+#We route the JSON code sent from the client into analysis.py
 
 @app.route("/")
 def default():
@@ -35,7 +35,7 @@ def receive():
             hist_json = model.history.to_json(orient='index')
             neighbours = db.get_neighbours(req_data['ID'], model.score)
             db.add_document(req_data['ID'],req_data['consent'],req_data['selfscore'], hist_json, model.score, model.top_three, model.top_three_veracity, neighbours)
-            #TODO: CHANGE THIS LATER
+            
             filtered_history = db.filter_history_user(req_data['ID'])
 
             #filtered_history = db.filter_history_user("eagle-848c27680ceeb864b34c0952b60187b5c84bcb392efefdcbdd8225c7ca9ccf")
