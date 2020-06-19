@@ -165,13 +165,13 @@ score = -0.10810810810810811
 
 
 #finding the most recent allEntries
-comparison_date_str = '31 05 2020 12:00:00'
+comparison_date_str = '28 05 2020 12:00:00'
 comparison_object = datetime.strptime(comparison_date_str, "%d %m %Y %H:%M:%S")
 for entry in db:
     try:
         datetime_object = datetime.strptime(entry['date'], "%d %m %Y %H:%M:%S")
         if(datetime_object > comparison_object):
-            print(entry['date'], entry['userid'], entry['hist'])
+            print(entry['date'], entry['userid'], entry['selfscore'], entry['score'])
             #print(entry['date'], entry['userid'])
     except:
         continue

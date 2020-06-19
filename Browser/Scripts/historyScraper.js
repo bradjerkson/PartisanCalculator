@@ -358,13 +358,13 @@ function partisanScoreToAlignment(partisanValue){
   var whole = Math.round(partisanValue);
 
   var dict = {
-    3: "Far Right",
-    2: "Right",
-    1: "Right-Centre",
-    0: "Centrist",
-    1: "Left-Centre",
-    2: "Left",
-    3: "Far Left"
+    '3': "Far Right",
+    '2': "Right",
+    '1': "Right-Centre",
+    '0': "Centrist",
+    '-1': "Left-Centre",
+    '-2': "Left",
+    '-3': "Far Left"
   };
 
   if(whole >= 3){
@@ -374,7 +374,7 @@ function partisanScoreToAlignment(partisanValue){
     return "Far Left";
   }
   else{
-    return dict[whole]
+    return dict[String(whole)]
   }
 }
 
