@@ -7,7 +7,7 @@ This code is divided into the following sections.
 
 1. **Browser** - contains the front-end scripts and manifest settings for Firefox/Chromium web browsers. Includes the functions that send to, and pull from the back-end servers.
 2. **MTurk** - during the research window, we recruited participants from the Amazon Mechanical Turk platform to provide testing of the app, as well as give inputs into their political stances. This contains the instructional guides to be embedded into the MTurk frames.
-2. **Web** - houses the infrastructure and logic, primarily in Python. API delivered through Flask.
+2. **Web** - houses the infrastructure and logic, primarily in Python. API delivered through Flask. CouchDB database.
 
 As of February 8th, 2021, the PartisanCalculator servers are offline.
 
